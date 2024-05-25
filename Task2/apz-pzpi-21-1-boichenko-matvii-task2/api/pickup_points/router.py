@@ -27,22 +27,22 @@ async def create_point(create_point_dto: CreatePickupPointDto,
     return await service.create_point(create_point_dto)
 
 
-@pickup_points_router.patch("/{product_id}", response_model=PickupPointResponseDto)
-async def patch_point(product_id: UUID, patch_point_dto: PatchPickupPointDto,
+@pickup_points_router.patch("/{medicine_id}", response_model=PickupPointResponseDto)
+async def patch_point(medicine_id: UUID, patch_point_dto: PatchPickupPointDto,
                       service: PickupPointCrudService = Depends(PickupPointCrudService.get_instance)):
-    return await service.update_point(product_id, patch_point_dto)
+    return await service.update_point(medicine_id, patch_point_dto)
 
 
-@pickup_points_router.get("/{product_id}", response_model=PickupPointResponseDto)
-async def get_point(product_id: UUID,
+@pickup_points_router.get("/{medicine_id}", response_model=PickupPointResponseDto)
+async def get_point(medicine_id: UUID,
                     service: PickupPointCrudService = Depends(PickupPointCrudService.get_instance)):
-    return await service.get_point_by_id(product_id)
+    return await service.get_point_by_id(medicine_id)
 
 
-@pickup_points_router.delete("/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_point(product_id: UUID,
+@pickup_points_router.delete("/{medicine_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_point(medicine_id: UUID,
                        service: PickupPointCrudService = Depends(PickupPointCrudService.get_instance)):
-    success = await service.delete_point_by_id(product_id)
+    success = await service.delete_point_by_id(medicine_id)
     if not success:
         raise HTTPException(status_code=404, detail="point not found")
     return {"detail": "point deleted successfully"}

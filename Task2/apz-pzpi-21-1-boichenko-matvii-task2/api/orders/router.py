@@ -2,6 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, status, HTTPException
 
+from common.error_messages import ErrorMessages
 from dependencies.user import current_active_user
 from services.order.order_service import OrderCrudService
 from services.order.order_schemas import (CreateOrderDto, PatchOrderDto, PutOrderDto, OrderResponseDto)
@@ -36,7 +37,7 @@ async def delete_order(order_id: UUID, service: OrderCrudService = Depends(Order
     success = await service.delete_order_by_id(order_id)
 
     if not success:
-        raise HTTPException(status_code=404, detail="Order not found")
+        raise HTTPException(status_code=404, detail=ErrorMessages.order.ORDER_NOT_FOUND)
 
     return {"detail": "Order deleted successfully"}
 

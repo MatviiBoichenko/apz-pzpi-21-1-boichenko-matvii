@@ -47,9 +47,9 @@ class OrderCrudService(BaseCrudService[Order]):
 
         # request_body = NewOrderRequest(**{
         #     "order_id": str(order.id),
-        #     "product_type": order.medicine.type,
-        #     "product_name": order.medicine.name,
-        #     "count": order.product_amount
+        #     "medicine_type": order.medicine.type,
+        #     "medicine_name": order.medicine.name,
+        #     "count": order.medicine_amount
         # })
         # await self.handlers_service.send_new_order_request(order.machine.mac, request_body)
 

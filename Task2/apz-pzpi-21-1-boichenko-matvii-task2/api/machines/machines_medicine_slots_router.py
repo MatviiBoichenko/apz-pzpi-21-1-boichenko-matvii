@@ -2,6 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, status, HTTPException
 
+from common.error_messages import ErrorMessages
 from dependencies.user import current_active_user
 from services.machine.machine_medicine_slot_schemas import (CreateMachineMedicineSlotDto,
                                                             UpdateMachineMedicineSlotDto,
@@ -34,7 +35,7 @@ async def delete_slot(slot_id: UUID,
                       service: MachineMedicineSlotCrudService = Depends(MachineMedicineSlotCrudService.get_instance)):
     success = await service.delete_slot_by_id(slot_id)
     if not success:
-        raise HTTPException(status_code=404, detail="Slot not found")
+        raise HTTPException(status_code=404, detail=ErrorMessages.Machine.MACHINE_SLOT_NOT_FOUND)
     return {"detail": "Slot deleted successfully"}
 
 

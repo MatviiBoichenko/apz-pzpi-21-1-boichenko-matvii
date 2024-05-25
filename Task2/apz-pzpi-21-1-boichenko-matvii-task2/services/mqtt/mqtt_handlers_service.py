@@ -85,7 +85,7 @@ class MQTTHandlersService:
             slot = await MachineMedicineSlot.update(
                 self.db, {"id": slot_id}, total_count=slot_data.left_amount)
             if not slot:
-                self.logger.error(f"Failed to update machine {body.payload.mac} product slot {slot_id}")
+                self.logger.error(f"Failed to update machine {body.payload.mac} medicine slot {slot_id}")
 
         return statistic
 

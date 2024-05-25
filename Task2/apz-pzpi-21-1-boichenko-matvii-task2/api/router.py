@@ -1,16 +1,20 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
+from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.analytics.router import analytics_router
+from api.backup.router import backup_router
 from api.general.router import general_router
 from api.machines.router import machines_router
 from api.medicines.router import medicines_router
 from api.mqtt.router import mqtt_router
 from api.orders.router import orders_router
 from api.pickup_points.router import pickup_points_router
-from api.users.router import users_router, auth_router
+from api.users.router import auth_router
+from api.users.router import users_router
 from config import settings
-from database import db, models
+from database import db
+from database import models
 from database.models import User
 from dependencies.localisation import get_accept_language
 from dependencies.user import current_active_user
@@ -19,6 +23,7 @@ from logger import Logger
 api = APIRouter(prefix=settings.API_V1_STR,
                 dependencies=[Depends(get_accept_language)])
 
+api.include_router(backup_router)
 api.include_router(users_router)
 api.include_router(auth_router)
 api.include_router(machines_router)

@@ -16,6 +16,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import joinedload
 
+from common.error_messages import ErrorMessages
 from database import db
 from database.models import Machine
 from database.models import MachinePickupPoint
@@ -72,6 +73,11 @@ class MetricsService:
         return distance_matrix
 
     async def optimize_route(self, request: RouteOptimizationRequest) -> RouteOptimizationResult:
+        """
+        Based on the Traveling saleman problem solution
+        :param request:
+        :return:
+        """
         machine = (await self.db.execute(select(Machine).filter(Machine.id == request.machine_id))).scalar_one_or_none()
         if not machine:
             raise Exception("Machine not found")
@@ -185,7 +191,7 @@ class MetricsService:
             select(PickupPoint).filter(PickupPoint.id == request.pickup_point2_id))).scalar_one_or_none()
 
         if not pickup_point1 or not pickup_point2:
-            raise Exception("Pickup point(s) not found")
+            raise HTTPException(status_code=404, detail=ErrorMessages.pickup_point.PICKUP_POINT_NOT_FOUND)
 
         # Extracting the coordinates
         lat1, lon1 = pickup_point1.location['latitude'], pickup_point1.location['longitude']

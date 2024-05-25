@@ -4,6 +4,7 @@ from fastapi import HTTPException
 from sqlalchemy import desc, select, asc
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from common.error_messages import ErrorMessages
 from database.models import MachineStatistic
 from common.utils.mapping import db_row_to_pydantic
 from services.base_service import BaseCrudService
@@ -21,7 +22,7 @@ class MachineStatisticCrudService(BaseCrudService[MachineStatistic]):
     async def get_statistic_by_id(self, statistic_id: UUID):
         statistic = await MachineStatistic.get(self.db, {"id": statistic_id})
         if not statistic:
-            raise HTTPException(status_code=404, detail="Statistic not found")
+            raise HTTPException(status_code=404, detail=ErrorMessages.Machine.MACHINE_STATISTIC_NOT_FOUND)
         return await db_row_to_pydantic(statistic, MachineStatisticResponseDto)
 
     async def search_statistics(self, search_filters: MachineStatisticSearchDto):

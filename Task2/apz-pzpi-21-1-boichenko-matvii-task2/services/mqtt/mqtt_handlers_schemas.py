@@ -29,9 +29,9 @@ class OrderEvent(BaseModel):
 
 
 class InventoryItemInfo(BaseModel):
-    product_type: int
-    product_name: str
-    capacity: int | None
+    medicine_type: int
+    medicine_name: str
+    capacity: int | None = None
     left_amount: int
 
 
@@ -54,6 +54,6 @@ class RegistrationRequest(BaseModel):
 
 class NewOrderRequest(BaseModel):
     order_id: str  # uuid.UUID
-    product_type: MedicineType
-    product_name: str
+    medicine_type: MedicineType
+    medicine_name: str
     count: int

@@ -8,6 +8,7 @@ from sqlalchemy import desc
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import expression as sql
 
+from common.error_messages import ErrorMessages
 from common.utils.mapping import db_row_to_pydantic
 from database import db
 from database.models import Machine
@@ -47,7 +48,7 @@ class MachineCrudService(BaseCrudService[Machine]):
         machine = await Machine.get(self.db, {"id": machine_id})
 
         if not machine:
-            raise HTTPException(status_code=404, detail="Machine not found")
+            raise HTTPException(status_code=404, detail=ErrorMessages.Machine.MACHINE_NOT_FOUND)
 
         return await db_row_to_pydantic(machine, MachineResponseDto)
 

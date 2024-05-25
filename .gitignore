@@ -159,3 +159,7 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 /Task2/apz-pzpi-21-1-boichenko-matvii-task2/postgres-data/
+/Task2/apz-pzpi-21-1-boichenko-matvii-task2/backup/
+/Task2/apz-pzpi-21-1-boichenko-matvii-task2/mosquitto-broker/config/
+/Task2/apz-pzpi-21-1-boichenko-matvii-task2/mosquitto-broker/data/
+/Task2/apz-pzpi-21-1-boichenko-matvii-task2/mosquitto-broker/log/

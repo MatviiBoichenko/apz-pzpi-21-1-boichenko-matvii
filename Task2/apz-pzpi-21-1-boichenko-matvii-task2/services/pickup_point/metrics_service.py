@@ -2,6 +2,7 @@ import logging
 import uuid
 from datetime import datetime
 from datetime import timezone
+from http.client import HTTPException
 from math import atan2
 from math import cos
 from math import radians

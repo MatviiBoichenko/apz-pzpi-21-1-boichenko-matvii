@@ -4,6 +4,7 @@ from typing import TypeVar, Generic
 
 from pydantic import BaseModel
 
+from database.models import MachineLocation
 from database.models import MedicineType
 
 T = TypeVar('T')
@@ -31,7 +32,6 @@ class OrderEvent(BaseModel):
 class InventoryItemInfo(BaseModel):
     medicine_type: int
     medicine_name: str
-    capacity: int | None = None
     left_amount: int
 
 
@@ -41,6 +41,7 @@ class MachineStatusInfo(BaseModel):
     humidity: int
     firmware_version: str
     hardware_version: str
+    location: MachineLocation
     inventory: dict[str, InventoryItemInfo]  # dict of machine medicine slots
 
 
@@ -52,8 +53,12 @@ class RegistrationRequest(BaseModel):
     mac: str
 
 
-class NewOrderRequest(BaseModel):
-    order_id: str  # uuid.UUID
+class NewOrderRequestMedicine(BaseModel):
     medicine_type: MedicineType
     medicine_name: str
     count: int
+
+
+class NewOrderRequest(BaseModel):
+    order_id: str  # uuid.UUID
+    order_medicines: list[NewOrderRequestMedicine]

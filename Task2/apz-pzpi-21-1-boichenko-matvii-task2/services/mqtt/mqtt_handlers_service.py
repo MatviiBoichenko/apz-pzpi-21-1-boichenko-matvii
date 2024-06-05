@@ -1,17 +1,22 @@
 import logging
-import uuid
 from datetime import datetime
 from datetime import timezone
 
-from fastapi import Depends, HTTPException
+from fastapi import Depends
+from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from common.error_messages import ErrorMessages
 from database import db
-from database.models import Order, OrderStatus, Machine, MachineStatistic, MachineStatus, MachineMedicineSlot
+from database.models import Machine
+from database.models import MachineMedicineSlot
+from database.models import MachineStatistic
+from database.models import MachineStatus
+from database.models import Order
+from database.models import OrderStatus
+from logger import CustomLogger
 from services.mqtt.mqtt_service import mqtt_service
 from .mqtt_handlers_schemas import *
-from common.error_messages import ErrorMessages
-from logger import CustomLogger
 
 
 class MQTTHandlersService:
@@ -70,6 +75,7 @@ class MQTTHandlersService:
 
         if not machine:
             self.logger.debug(f"No machine with such mac {machine_mac} of this statistic found")
+            raise HTTPException(status_code=404, detail=ErrorMessages.Machine.MACHINE_NOT_FOUND)
 
         machine_id: uuid.UUID = machine.id
         self.logger.debug(f"Trying to save statistic for machine {machine_id}")
@@ -78,8 +84,10 @@ class MQTTHandlersService:
             self.db, **{"machine_id": machine_id, "info": body.payload.model_dump()})
 
         if machine.status == MachineStatus.unregistered:
-            await Machine.update(self.db, {"mac": machine_mac},
-                                 **{"status": MachineStatus.registered, "is_online": True})
+            await Machine.update(
+                self.db, {"mac": machine_mac},
+                **{"status": MachineStatus.registered, "is_online": True,
+                   "location": body.payload.location.model_dump()})
 
         for slot_id, slot_data in body.payload.inventory.items():
             slot = await MachineMedicineSlot.update(

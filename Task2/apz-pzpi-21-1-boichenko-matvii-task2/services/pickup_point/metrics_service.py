@@ -2,7 +2,6 @@ import logging
 import uuid
 from datetime import datetime
 from datetime import timezone
-from http.client import HTTPException
 from math import atan2
 from math import cos
 from math import radians
@@ -10,6 +9,7 @@ from math import sin
 from math import sqrt
 
 from fastapi import Depends
+from fastapi import HTTPException
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
 from pydantic import BaseModel

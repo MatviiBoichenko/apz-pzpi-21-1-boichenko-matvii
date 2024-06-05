@@ -46,7 +46,6 @@ class MachineMedicineSlotCrudService(BaseCrudService[MachineMedicineSlot]):
                 medicine_type=medicine_dto.type,
                 medicine_name=medicine_dto.name,
                 left_amount=slot.total_count,
-                capacity=1000
             )
         })
 
@@ -60,7 +59,6 @@ class MachineMedicineSlotCrudService(BaseCrudService[MachineMedicineSlot]):
                 medicine_type=slot.medicine.type,
                 medicine_name=slot.medicine.name,
                 left_amount=slot.total_count,
-                capacity=1000
             )
         })
 

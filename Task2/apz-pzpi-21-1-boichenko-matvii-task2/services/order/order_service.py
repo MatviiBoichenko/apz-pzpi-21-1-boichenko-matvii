@@ -28,11 +28,17 @@ class OrderCrudService(BaseCrudService[Order]):
     async def create_order(self, create_order_dto: CreateOrderDto):
         order_info = create_order_dto.model_dump()
 
+        order_medicines = []
         payment_amount = 0.0
         for med in create_order_dto.medicines:
             medicine = await Medicine.get(self.db, {"id": med.id})
             # print("AsyncLazyLoad", await medicine.awaitable_attrs.machine_medicine_slots)
             payment_amount += medicine.price * med.count
+            order_medicines.append({
+                "medicine_type": medicine.type,
+                "medicine_name": medicine.name,
+                "count": med.count
+            })
         order_info["payment_amount"] = payment_amount
 
         order: Order = await Order.create(self.db, **order_info)
@@ -45,13 +51,11 @@ class OrderCrudService(BaseCrudService[Order]):
             "payment_date": datetime.now(tz=timezone.utc)
         })
 
-        # request_body = NewOrderRequest(**{
-        #     "order_id": str(order.id),
-        #     "medicine_type": order.medicine.type,
-        #     "medicine_name": order.medicine.name,
-        #     "count": order.medicine_amount
-        # })
-        # await self.handlers_service.send_new_order_request(order.machine.mac, request_body)
+        request_body = NewOrderRequest(**{
+            "order_id": str(order.id),
+            "order_medicines": order_medicines
+        })
+        await self.handlers_service.send_new_order_request(order.machine.mac, request_body)
 
         return await db_row_to_pydantic(order, OrderResponseDto)
 

@@ -1,13 +1,16 @@
 import json
 import os
-from datetime import datetime, timezone
+from datetime import datetime
+from datetime import timezone
 from logging import Logger
 from typing import Callable
 
 import requests
-from paho.mqtt.client import Client, MQTTMessage
+from paho.mqtt.client import Client
+from paho.mqtt.client import MQTTMessage
 
-from .schemas import SubscribeInfo, HttpRequestBody
+from .schemas import HttpRequestBody
+from .schemas import SubscribeInfo
 
 ACTIONS_QUEUE: list[Callable] = list()
 
@@ -36,9 +39,19 @@ class ApiBridgeClient(object):
             keepalive=120
         )
 
+    def test_api_availability(self):
+        try:
+            response = requests.post(
+                f"{self.api_host}/api/v1/mqtt-handlers/test",
+                json={}, headers={"X-Api-Key": self.api_key, "Content-Type": "application/json"})
+            assert response.status_code == 200, "Failed HTTP API availability test"
+        except:
+            assert False, "Failed HTTP API availability test"
+
     def _on_connect(self, client, userdata, flags, rc):
         self._logger.debug("Connected with result code " + str(rc))
         self._subscribe_to_all_necessary_topics()
+        self.test_api_availability()
 
     def _on_disconnect(self, client, userdata, rc):
         self._logger.debug("Disconnected with result code " + str(rc))

@@ -100,35 +100,35 @@ class DeviceMQTTClient(object):
             message = {"status": "start"}
             self.mqtt_client.publish(f"machine/{self.machine_mac}/orders/{order.order_id}/event", json.dumps(message))
 
-            changes_in_inventory: dict[InventoryItemInfo, int] = {}
+            changes_in_inventory: list[dict[str, InventoryItemInfo | int]] = []
             for med in order.order_medicines:
-                inventory_item: InventoryItemInfo | None = None
+                inventory_item_change: dict[str, InventoryItemInfo | int] | None = None
                 for item in self.machine.inventory.values():
                     if item.medicine_type == med.medicine_type and item.medicine_name == med.medicine_name:
-                        inventory_item = item
+                        inventory_item_change = {"item": item, "count": med.count}
                         break
 
-                if not inventory_item:
+                if not inventory_item_change or not inventory_item_change.get("item"):
                     self._logger.info("Failed to execute the order. Such medicine not found")
                     message = {"status": "fail", "reason": "Such medicine not found"}
                     self.mqtt_client.publish(f"machine/{self.machine_mac}/orders/{order.order_id}/event",
                                              json.dumps(message))
                     return
 
-                if inventory_item.left_amount <= 0:
+                if inventory_item_change["item"].left_amount <= 0:
                     self._logger.info("Failed to execute the order. No medicine left")
                     message = {"status": "fail", "reason": "No medicine left"}
                     self.mqtt_client.publish(f"machine/{self.machine_mac}/orders/{order.order_id}/event",
                                              json.dumps(message))
                     return
 
-                changes_in_inventory[inventory_item] = med.count
+                changes_in_inventory.append(inventory_item_change)
 
             # executing order on device, call to device module to give a medicine
             time.sleep(5)
 
-            for inventory_item, change_count in changes_in_inventory.items():
-                inventory_item.left_amount -= change_count
+            for change in changes_in_inventory:
+                change["item"].left_amount -= change["count"]
             self._save_machine_info()
 
             self._logger.info(f"Successfully executed order {order.order_id}")
@@ -207,7 +207,7 @@ class DeviceMQTTClient(object):
         until current date equals to sleep until date
         """
         status_to_next_sleep_secs_map = {
-            MachineStatus.unregistered: 10,
+            MachineStatus.unregistered: 30,
             MachineStatus.registered: 600
         }
         self._sleep_until = datetime.now(tz=timezone.utc).timestamp() + status_to_next_sleep_secs_map[self.machine.status]

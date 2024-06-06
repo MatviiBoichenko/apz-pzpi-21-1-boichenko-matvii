@@ -1,6 +1,11 @@
+from __future__ import annotations
 import uuid
 from datetime import datetime
 from enum import IntEnum, StrEnum
+
+from sqlalchemy import Column
+from sqlalchemy.orm import Relationship
+from sqlalchemy.orm import WriteOnlyMapped
 
 from common.enums.tables import PostgresTables
 from sqlalchemy.dialects.postgresql import UUID
@@ -46,7 +51,7 @@ class Order(DbBaseModel):
     user = relationship("User", back_populates="orders", lazy="selectin")
     machine = relationship("Machine", back_populates="orders", lazy="selectin")
     pickup_point = relationship("PickupPoint", back_populates="orders", lazy="selectin")
-    order_medicines = relationship("OrderMedicine", back_populates="order")
+    order_medicines: WriteOnlyMapped[OrderMedicine] = relationship("OrderMedicine", back_populates="order")
 
 
 class OrderMedicine(DbBaseModel):

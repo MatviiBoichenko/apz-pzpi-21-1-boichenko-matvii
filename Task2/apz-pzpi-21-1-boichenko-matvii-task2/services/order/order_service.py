@@ -9,6 +9,7 @@ from common.error_messages import ErrorMessages
 from common.utils.mapping import db_row_to_pydantic
 from database import db
 from database.models import Order, Medicine
+from database.models import OrderMedicine
 from services.base_service import BaseCrudService
 from services.mqtt.mqtt_handlers_schemas import NewOrderRequest
 from services.mqtt.mqtt_handlers_service import MQTTHandlersService
@@ -28,20 +29,27 @@ class OrderCrudService(BaseCrudService[Order]):
     async def create_order(self, create_order_dto: CreateOrderDto):
         order_info = create_order_dto.model_dump()
 
+        request_order_medicines = []
         order_medicines = []
         payment_amount = 0.0
         for med in create_order_dto.medicines:
             medicine = await Medicine.get(self.db, {"id": med.id})
             # print("AsyncLazyLoad", await medicine.awaitable_attrs.machine_medicine_slots)
             payment_amount += medicine.price * med.count
-            order_medicines.append({
+            request_order_medicines.append({
                 "medicine_type": medicine.type,
                 "medicine_name": medicine.name,
                 "count": med.count
             })
+            order_medicines.append(OrderMedicine(**{
+                "medicine_id": med.id,
+                "medicine_count": med.count
+            }))
         order_info["payment_amount"] = payment_amount
+        order_info.pop("medicines")
 
         order: Order = await Order.create(self.db, **order_info)
+        order.order_medicines.add_all(order_medicines)
 
         # TODO: Execute HERE payment logic, charge user account
         print("Processing payment...")
@@ -53,7 +61,7 @@ class OrderCrudService(BaseCrudService[Order]):
 
         request_body = NewOrderRequest(**{
             "order_id": str(order.id),
-            "order_medicines": order_medicines
+            "order_medicines": request_order_medicines
         })
         await self.handlers_service.send_new_order_request(order.machine.mac, request_body)
 

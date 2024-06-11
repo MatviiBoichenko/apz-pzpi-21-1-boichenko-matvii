@@ -5,6 +5,7 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "esModuleInterop": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -16,12 +17,24 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": false,
+
+    /* Paths */
+    "baseUrl": "src",
+    "paths": {
+      "@api/*": ["api/*"],
+      "@pages/*": ["pages/*"],
+      "@styles/*": ["styles/*"],
+      "@utils/*": ["utils/*"],
+      "@shared/*": ["shared/*"],
+      "@hooks/*": ["hooks/*"],
+      "@stores/*": ["services/stores/*"],
+      "@components/*": ["components/*"],
+    }
   },
-  "include": [
-    "src"
-  ],
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json"}]
 }

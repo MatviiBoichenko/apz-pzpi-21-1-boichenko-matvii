@@ -1,7 +1,17 @@
 import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
-// import {SignUp} from '@pages/SignUp';
 import React, { Suspense } from 'react';
 import { Main } from '@pages/Main';
+import Login from "@pages/Auth/Login";
+import Home from "@pages/Home";
+import Register from "@pages/Auth/Register";
+import Profile from "@pages/Profile";
+import ProfileEdit from "@pages/ProfileEdit";
+import ProfileOrders from "@pages/ProfileOrders";
+import DelivererMachines from "@pages/DelivererMachines";
+import DelivererMachineDetail from "@pages/DelivererMachineDetail";
+import Statistics from "@pages/Statistics";
+import NotFound from "@pages/NotFound";
+import { Card } from "@chakra-ui/react";
 
 const router = createBrowserRouter(
   [{
@@ -12,18 +22,18 @@ const router = createBrowserRouter(
       {
         element: <Main />,
         children: [
-          {index: true, element: <></>},
-          {path: '/home', element: <>home</>},
-          {path: '/login', element: <>login</>},
-          {path: '/register', element: <></>},
-          {path: '/card', element: <>card</>},
-          {path: '/profile', element: <>profile</>},
-          {path: '/profile/edit', element: <>profile/edit</>},
-          {path: '/profile/orders', element: <>profile/orders</>},
-          {path: '/deliverer/machines', element: <>deliverer</>},
-          {path: '/deliverer/machines/:id', element: <>deliverer/machines</>},
-          {path: '/deliverer/statistics', element: <>statistics</>},
-          {path: '/404', element: <>404 Not Found</>},
+          {index: true, element: <Home />},
+          {path: '/home', element: <Home />},
+          {path: '/login', element: <Login />},
+          {path: '/register', element: <Register />},
+          {path: '/card', element: <Card />},
+          {path: '/profile', element: <Profile />},
+          {path: '/profile/edit', element: <ProfileEdit />},
+          {path: '/profile/orders', element: <ProfileOrders />},
+          {path: '/deliverer/machines', element: <DelivererMachines />},
+          {path: '/deliverer/machines/:id', element: <DelivererMachineDetail />},
+          {path: '/deliverer/statistics', element: <Statistics />},
+          {path: '/404', element: <NotFound />},
           {
             path: '*', element: <Navigate to={'/404'}/>
           },

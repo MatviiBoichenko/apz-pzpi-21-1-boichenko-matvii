@@ -5,24 +5,28 @@ import { Colors } from '@styles/colors.ts';
 import { MobileNav } from './MobileNav.tsx';
 import { DesktopNav } from './DesktopNav.tsx';
 import { NavbarItem } from './types.ts';
+import { UserRole } from "@stores/User/types.ts";
 
 export const NavbarItems: Array<NavbarItem> = [
   {label: 'Home', href: `/home`},
-  {label: 'Profile', href: '/profile'},
-  {label: 'My Orders', href: '/profile/orders'},
-  {label: 'Card', href: '/card'},
+  {label: 'Profile', href: '/profile', isAuthRequired: true},
+  {label: 'My Orders', href: '/profile/orders', isAuthRequired: true, roles: [UserRole.Customer]},
+  {label: 'Card', href: '/card', isAuthRequired: true, roles: [UserRole.Customer]},
+  {label: 'Login', href: '/login', isAuthRequired: false},
+  {label: 'Register', href: '/register', isAuthRequired: false},
   {
     label: 'Deliverer',
-    // href: `/deliverer/machines`,
+    roles: [UserRole.Deliverer],
     children: [
       {
-        // iconPath: '/img/solarCellsLogo.svg',
-        label: 'Manage machines',
-        href: '/deliverer/machines'
+        label: 'Machines',
+        href: '/deliverer/machines',
+        isAuthRequired: true
       },
       {
         label: 'Statistics',
-        href: '/deliverer/statistics'
+        href: '/deliverer/statistics',
+        isAuthRequired: true
       },
     ]
   },

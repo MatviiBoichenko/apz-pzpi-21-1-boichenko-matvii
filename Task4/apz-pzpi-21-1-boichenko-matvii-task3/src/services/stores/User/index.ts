@@ -1,24 +1,26 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
+import { OpenAPI } from "@api/client";
+import { User } from "@stores/User/types.ts";
 
 interface UserState {
   isSignedIn: boolean;
   language: string;
   token: string | null;
-  refresh_token: string | null;
+  refresh_token?: string | null;
   cart: number;
-  isLoginModalOpen: boolean;
+  user?: User
 }
 
 type Actions = {
   setLanguage: (language: string) => void;
   onSignOut: () => void;
-  authorize: (token: string, refresh_token: string) => void;
+  authorize: (token: string, refresh_token?: string) => void;
   addToCart: (qty: number) => void;
   changeCart: (qty: number) => void;
   clearCart: () => void;
-  handleChangeLoginModal: (isOpen: boolean) => void;
+  setUser: (user: User) => void;
 };
 
 const initialState: UserState = {
@@ -27,7 +29,6 @@ const initialState: UserState = {
   token: null,
   refresh_token: null,
   cart: 0,
-  isLoginModalOpen: false,
 };
 
 // User store for global state management by Zustand
@@ -39,18 +40,24 @@ export const useUserStore = create(
         set((state) => {
           state.language = language;
         }),
-      onSignOut: () =>
+      onSignOut: () => {
+        console.log('onSignOut')
+        OpenAPI.TOKEN = undefined;
         set((state) => {
           state.token = null;
           state.refresh_token = null;
           state.isSignedIn = false;
-        }),
-      authorize: (token, refresh_token) =>
+          state.user = undefined;
+        });
+      },
+      authorize: (token, refresh_token) => {
+        OpenAPI.TOKEN = token;
         set((state) => {
           state.token = token;
           state.refresh_token = refresh_token;
           state.isSignedIn = true;
-        }),
+        });
+      },
       addToCart: (qty) =>
         set((state) => {
           state.cart += qty;
@@ -63,11 +70,10 @@ export const useUserStore = create(
         set((state) => {
           state.cart = 0;
         }),
-      handleChangeLoginModal: (isOpen) =>
-        set((state) => {
-          state.isLoginModalOpen = isOpen;
-        }),
+      setUser: (user) => set((state) => {
+        state.user = user;
+      }),
     })),
-    { name: 'user' },
+    {name: 'user'},
   ),
 );

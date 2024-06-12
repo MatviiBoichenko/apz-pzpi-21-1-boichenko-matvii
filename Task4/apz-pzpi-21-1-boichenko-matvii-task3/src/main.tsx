@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import { Router } from './router.tsx';
 import { theme } from './styles/theme.ts';
 import { RouterProvider } from 'react-router-dom';
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
+import { ApiProvider } from "@api/wrapper.tsx";
 
 
 export const RootComponent = () => {
@@ -14,7 +15,9 @@ export const RootComponent = () => {
   const rootJSX = <>
     <ColorModeScript />
     <ChakraProvider theme={theme}>
-    <RouterProvider router={Router} />
+      <ApiProvider>
+        <RouterProvider router={Router} />
+      </ApiProvider>
     </ChakraProvider>
   </>
 

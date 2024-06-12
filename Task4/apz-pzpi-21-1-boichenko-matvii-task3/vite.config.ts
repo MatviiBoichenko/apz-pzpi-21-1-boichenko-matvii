@@ -23,7 +23,7 @@ export default defineConfig(({command, mode}) => {
       alias: {
         '@pages': path.resolve(__dirname, 'src/pages'),
         '@styles': path.resolve(__dirname, 'src/styles'),
-        '@store': path.resolve(__dirname, 'src/services/store'),
+        '@stores': path.resolve(__dirname, 'src/services/stores'),
         '@utils': path.resolve(__dirname, 'src/utils'),
         '@shared': path.resolve(__dirname, 'src/shared'),
         '@hooks': path.resolve(__dirname, 'src/hooks'),

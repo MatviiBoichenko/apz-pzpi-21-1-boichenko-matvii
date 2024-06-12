@@ -34,7 +34,7 @@ export function Main(props: unknown) {
 
   return <VStack minHeight={'100vh'} bg={Colors.background} gap={0} textStyle='body'>
     <Header />
-    <Stack flex={1} width='100%' direction='column' pt={{base: '72px', lg: '70px'}}>
+    <Stack flex={1} h='full' width='100%' direction='column' pt={{base: '72px', lg: '70px'}}>
       <Outlet />
     </Stack>
     <Footer />

@@ -5,13 +5,12 @@ import Login from "@pages/Auth/Login";
 import Home from "@pages/Home";
 import Register from "@pages/Auth/Register";
 import Profile from "@pages/Profile";
-import ProfileEdit from "@pages/ProfileEdit";
+import Cart from "@pages/Cart";
 import ProfileOrders from "@pages/ProfileOrders";
-import DelivererMachines from "@pages/DelivererMachines";
-import DelivererMachineDetail from "@pages/DelivererMachineDetail";
-import Statistics from "@pages/Statistics";
+// import DelivererMachines from "@pages/DelivererMachines";
+// import DelivererMachineDetail from "@pages/DelivererMachineDetail";
+// import Statistics from "@pages/Statistics";
 import NotFound from "@pages/NotFound";
-import { Card } from "@chakra-ui/react";
 
 const router = createBrowserRouter(
   [{
@@ -26,13 +25,12 @@ const router = createBrowserRouter(
           {path: '/home', element: <Home />},
           {path: '/login', element: <Login />},
           {path: '/register', element: <Register />},
-          {path: '/card', element: <Card />},
+          {path: '/card', element: <Cart />},
           {path: '/profile', element: <Profile />},
-          {path: '/profile/edit', element: <ProfileEdit />},
           {path: '/profile/orders', element: <ProfileOrders />},
-          {path: '/deliverer/machines', element: <DelivererMachines />},
-          {path: '/deliverer/machines/:id', element: <DelivererMachineDetail />},
-          {path: '/deliverer/statistics', element: <Statistics />},
+          // {path: '/deliverer/machines', element: <DelivererMachines />},
+          // {path: '/deliverer/machines/:id', element: <DelivererMachineDetail />},
+          // {path: '/deliverer/statistics', element: <Statistics />},
           {path: '/404', element: <NotFound />},
           {
             path: '*', element: <Navigate to={'/404'}/>

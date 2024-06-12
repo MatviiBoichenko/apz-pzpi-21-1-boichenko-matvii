@@ -1,24 +1,25 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import { OpenAPI } from "@api/client";
-import { User } from "@stores/User/types.ts";
+import { MedicineResponseDto, OpenAPI } from "@api/client";
+import { Cart, User } from "@stores/User/types.ts";
 
 interface UserState {
   isSignedIn: boolean;
   language: string;
   token: string | null;
   refresh_token?: string | null;
-  cart: { [p: string]: number };
-  user?: User
+  cart: Cart;
+  user?: User;
 }
 
 type Actions = {
   setLanguage: (language: string) => void;
   onSignOut: () => void;
   authorize: (token: string, refresh_token?: string) => void;
-  addToCart: (medicineId: string, qty: number) => void;
-  changeCart: (medicineId: string, qty: number) => void;
+  addToCart: (medicine: MedicineResponseDto, count: number) => void;
+  changeCartMedicineCount: (medicineId: string, count: number) => void;
+  deleteMedicineFromCart: (medicineId: string) => void;
   clearCart: () => void;
   setUser: (user: User) => void;
 };
@@ -28,7 +29,10 @@ const initialState: UserState = {
   language: 'en',
   token: null,
   refresh_token: null,
-  cart: {},
+  cart: {
+    payment_currency: 'EUR',
+    medicines: []
+  },
 };
 
 // User store for global state management by Zustand
@@ -58,17 +62,32 @@ export const useUserStore = create(
           state.isSignedIn = true;
         });
       },
-      addToCart: (medicineId, qty) =>
+      addToCart: (medicine, count) =>
         set((state) => {
-          state.cart[medicineId] = qty + (state.cart[medicineId] || 0);
+          const existingIndex = state.cart.medicines.findIndex(m => m.id === medicine.id);
+          if (existingIndex === -1) {
+            state.cart.medicines.push({...medicine, count: count});
+          } else {
+            state.cart.medicines[existingIndex] = {
+              ...medicine, count: count
+            }
+          }
         }),
-      changeCart: (medicineId, qty) =>
+      changeCartMedicineCount: (medicineId, count) =>
         set((state) => {
-          state.cart[medicineId] = qty;
+          for (const o of state.cart.medicines)
+            if (o.id === medicineId) {
+              o.count = count;
+              break;
+            }
+        }),
+      deleteMedicineFromCart: (medicineId) =>
+        set((state) => {
+          state.cart.medicines = state.cart.medicines.filter(m => m.id != medicineId);
         }),
       clearCart: () =>
         set((state) => {
-          state.cart = {};
+          state.cart = {medicines: []};
         }),
       setUser: (user) => set((state) => {
         state.user = user;

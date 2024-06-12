@@ -63,7 +63,8 @@ class OrderCrudService(BaseCrudService[Order]):
             "order_id": str(order.id),
             "order_medicines": request_order_medicines
         })
-        await self.handlers_service.send_new_order_request(order.machine.mac, request_body)
+        if order.machine:
+            await self.handlers_service.send_new_order_request(order.machine.mac, request_body)
 
         return await db_row_to_pydantic(order, OrderResponseDto)
 

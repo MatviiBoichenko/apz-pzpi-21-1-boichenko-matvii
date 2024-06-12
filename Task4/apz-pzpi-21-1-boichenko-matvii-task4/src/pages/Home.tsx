@@ -103,7 +103,7 @@ const Home = () => {
 
   const handleAddToCart = () => {
     if (selectedMedicine) {
-      addToCart(selectedMedicine.id, quantity);
+      addToCart(selectedMedicine, quantity);
       toast({
         title: 'Medicine added to cart',
         status: 'success',

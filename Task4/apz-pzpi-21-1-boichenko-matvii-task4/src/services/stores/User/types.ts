@@ -1,3 +1,5 @@
+import { Currencies, MedicineResponseDto } from "@api/client";
+
 export enum UserRole {
   Customer = 1,
   Deliverer = 2,
@@ -11,4 +13,13 @@ export interface User {
   email: string;
   birthdate: string | null;
   role: UserRole;
+}
+
+export type CartMedicine = MedicineResponseDto & { count: number };
+
+export interface Cart {
+  machine_id?: string,
+  pickup_point_id?: string,
+  payment_currency?: Currencies,
+  medicines: CartMedicine[]
 }

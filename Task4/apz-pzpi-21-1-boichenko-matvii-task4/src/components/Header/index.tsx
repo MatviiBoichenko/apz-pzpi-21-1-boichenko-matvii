@@ -9,11 +9,12 @@ import { UserRole } from "@stores/User/types.ts";
 
 export const NavbarItems: Array<NavbarItem> = [
   {label: 'Home', href: `/home`},
-  {label: 'Profile', href: '/profile', isAuthRequired: true},
-  {label: 'My Orders', href: '/profile/orders', isAuthRequired: true, roles: [UserRole.Customer]},
-  {label: 'Card', href: '/card', isAuthRequired: true, roles: [UserRole.Customer]},
   {label: 'Login', href: '/login', isAuthRequired: false},
   {label: 'Register', href: '/register', isAuthRequired: false},
+  {label: 'Profile', href: '/profile', isAuthRequired: true},
+  {label: 'Medicines', href: '/medicines', isAuthRequired: true, roles: [UserRole.Customer]},
+  {label: 'Card', href: '/card', isAuthRequired: true, roles: [UserRole.Customer]},
+  {label: 'My Orders', href: '/profile/orders', isAuthRequired: true, roles: [UserRole.Customer]},
   {
     label: 'Deliverer',
     roles: [UserRole.Deliverer],
@@ -47,7 +48,7 @@ export const Header: React.FC = props => {
               align={'center'}
               justify='space-between'>
         <Flex flex={1} align='center' justify={{base: 'start', lg: 'center'}} gap='40px'>
-          <Link>
+          <Link href='/home'>
             <Image src={'/img/medmobile-logo.png'} objectFit='contain' h='50px' />
           </Link>
           <Flex display={{base: 'none', lg: 'flex'}}>

@@ -1368,6 +1368,56 @@ export const $MedicineResponseDto = {
     title: 'MedicineResponseDto'
 } as const;
 
+export const $MedicineSearchDto = {
+    properties: {
+        simple_filters: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/CreateMedicineDtoPartial'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        },
+        search_substring: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Search Substring'
+        },
+        pagination: {
+            allOf: [
+                {
+                    '$ref': '#/components/schemas/PaginationParams'
+                }
+            ],
+            default: {
+                offset: 0,
+                limit: 5
+            }
+        },
+        order_by: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/OrderByParams'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        }
+    },
+    type: 'object',
+    required: ['order_by'],
+    title: 'MedicineSearchDto'
+} as const;
+
 export const $MedicineType = {
     type: 'integer',
     enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],

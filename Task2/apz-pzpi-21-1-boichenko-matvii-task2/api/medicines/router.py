@@ -10,6 +10,7 @@ from dependencies.user import current_active_user
 from services.medicine.medicine_service import MedicineCrudService
 from services.medicine.schemas import CreateMedicineDto
 from services.medicine.schemas import MedicineResponseDto
+from services.medicine.schemas import MedicineSearchDto
 from services.medicine.schemas import PatchMedicineDto
 from services.medicine.schemas import PutMedicineDto
 
@@ -48,5 +49,5 @@ async def delete_medicine(medicine_id: UUID, service: MedicineCrudService = Depe
 
 
 @medicines_router.post("/search", response_model=list[MedicineResponseDto])
-async def search_medicines(filters: dict, service: MedicineCrudService = Depends(MedicineCrudService.get_instance)):
-    return await service.search_medicines(filters)
+async def search_medicines(search_dto: MedicineSearchDto, service: MedicineCrudService = Depends(MedicineCrudService.get_instance)):
+    return await service.search_medicines(search_dto)

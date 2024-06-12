@@ -311,6 +311,13 @@ export type MedicineResponseDto = {
     is_available: boolean;
 };
 
+export type MedicineSearchDto = {
+    simple_filters?: CreateMedicineDtoPartial | null;
+    search_substring?: string | null;
+    pagination?: PaginationParams;
+    order_by: OrderByParams | null;
+};
+
 export type MedicineType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
 export type OrderByEnum = 'count' | 'sum_income';
@@ -768,9 +775,7 @@ export type DeleteMedicineApiV1MedicinesMedicineIdDeleteResponse = void;
 
 export type SearchMedicinesApiV1MedicinesSearchPostData = {
     acceptLanguage?: string;
-    requestBody: {
-        [key: string]: unknown;
-    };
+    requestBody: MedicineSearchDto;
 };
 
 export type SearchMedicinesApiV1MedicinesSearchPostResponse = Array<MedicineResponseDto>;

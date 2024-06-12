@@ -1,11 +1,14 @@
 from uuid import UUID
 
 from fastapi import HTTPException
+from sqlalchemy import asc
+from sqlalchemy import desc
+from sqlalchemy import sql
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from common.error_messages import ErrorMessages
-from database.models import Medicine
 from common.utils.mapping import db_row_to_pydantic
+from database.models import Medicine
 from services.base_service import BaseCrudService
 from services.medicine.schemas import *
 
@@ -40,8 +43,28 @@ class MedicineCrudService(BaseCrudService[Medicine]):
         success: bool = await Medicine.delete(self.db, {"id": medicine_id})
         return success
 
-    async def search_medicines(self, search_filters: dict):
-        medicines: list[Medicine] = await Medicine.get_all(self.db, search_filters)
+    async def search_medicines(self, search_dto: MedicineSearchDto):
+        query = sql.select(Medicine).options()
+
+        if search_dto.search_substring:
+            query = query.filter(sql.or_(Medicine.name.ilike(f'%{search_dto.search_substring}%'),
+                                 Medicine.description.ilike(f'%{search_dto.search_substring}%')))
+
+        if search_dto.simple_filters:
+            query = query.filter_by(**search_dto.simple_filters.model_dump(exclude_unset=True))
+
+        if search_dto.order_by:
+            order_by = search_dto.order_by
+            if order_by.desc:
+                query = query.order_by(desc(getattr(Medicine, order_by.order_by_column)))
+            else:
+                query = query.order_by(asc(getattr(Medicine, order_by.order_by_column)))
+
+        if search_dto.pagination:
+            pagination = search_dto.pagination
+            query = query.offset(pagination.offset).limit(pagination.limit)
+        print('querylog', query)
+        medicines = (await self.db.scalars(query)).all()
 
         results = []
         for c in medicines:

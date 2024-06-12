@@ -9,7 +9,7 @@ interface UserState {
   language: string;
   token: string | null;
   refresh_token?: string | null;
-  cart: number;
+  cart: { [p: string]: number };
   user?: User
 }
 
@@ -17,8 +17,8 @@ type Actions = {
   setLanguage: (language: string) => void;
   onSignOut: () => void;
   authorize: (token: string, refresh_token?: string) => void;
-  addToCart: (qty: number) => void;
-  changeCart: (qty: number) => void;
+  addToCart: (medicineId: string, qty: number) => void;
+  changeCart: (medicineId: string, qty: number) => void;
   clearCart: () => void;
   setUser: (user: User) => void;
 };
@@ -28,7 +28,7 @@ const initialState: UserState = {
   language: 'en',
   token: null,
   refresh_token: null,
-  cart: 0,
+  cart: {},
 };
 
 // User store for global state management by Zustand
@@ -58,17 +58,17 @@ export const useUserStore = create(
           state.isSignedIn = true;
         });
       },
-      addToCart: (qty) =>
+      addToCart: (medicineId, qty) =>
         set((state) => {
-          state.cart += qty;
+          state.cart[medicineId] = qty + (state.cart[medicineId] || 0);
         }),
-      changeCart: (qty) =>
+      changeCart: (medicineId, qty) =>
         set((state) => {
-          state.cart = qty;
+          state.cart[medicineId] = qty;
         }),
       clearCart: () =>
         set((state) => {
-          state.cart = 0;
+          state.cart = {};
         }),
       setUser: (user) => set((state) => {
         state.user = user;

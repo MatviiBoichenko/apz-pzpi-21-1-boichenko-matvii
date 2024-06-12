@@ -2,6 +2,7 @@ import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from sqlalchemy import text
+from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
@@ -37,6 +38,14 @@ def create_app():
     def main_error_handler(request: Request, exc: Exception):
         return JSONResponse({"success": False, "error": exc.__class__.__name__, "message": str(exc)},
                             status_code=500)
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],  # Allows all origins
+        allow_credentials=True,
+        allow_methods=["*"],  # Allows all methods
+        allow_headers=["*"],  # Allows all headers
+    )
 
     babel.init_app(app)
 

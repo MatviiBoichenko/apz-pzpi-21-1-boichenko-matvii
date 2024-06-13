@@ -1,0 +1,59 @@
+name: Backend CI/CD
+
+on:
+  push:
+    paths:
+      - 'Task2/backend/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: |
+          cd Task2/backend
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          cd Task2/backend
+          # Add your test command here
+          pytest
+
+      - name: Build Docker image
+        run: |
+          cd Task2/backend
+          docker build -t your-docker-repo/fastapi-backend:latest .
+
+      - name: Push Docker image
+        run: |
+          echo "${{ secrets.ACR_PASSWORD }}" | docker login myContainerRegistry.azurecr.io -u "${{ secrets.ACR_USERNAME }}" --password-stdin
+          docker tag your-docker-repo/fastapi-backend:latest myContainerRegistry.azurecr.io/fastapi-backend:latest
+          docker push myContainerRegistry.azurecr.io/fastapi-backend:latest
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Azure CLI Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure
+        run: |
+          az webapp config container set --name myFastAPIApp --resource-group myResourceGroup --docker-custom-image-name myContainerRegistry.azurecr.io/fastapi-backend:latest --docker-registry-server-url https://myContainerRegistry.azurecr.io --docker-registry-server-user ${{ secrets.ACR_USERNAME }} --docker-registry-server-password ${{ secrets.ACR_PASSWORD }}

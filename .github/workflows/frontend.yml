@@ -3,7 +3,7 @@ name: Frontend CI/CD
 on:
   push:
     paths:
-      - 'Task4/frontend/**'
+      - 'Task4/apz-pzpi-21-1-boichenko-matvii-task4/**'
   workflow_dispatch:
 
 jobs:
@@ -21,19 +21,19 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd Task4/frontend
+          cd Task4/apz-pzpi-21-1-boichenko-matvii-task4
           npm install
 
       - name: Build frontend
         run: |
-          cd Task4/frontend
+          cd Task4/apz-pzpi-21-1-boichenko-matvii-task4
           npm run build
 
       - name: Archive build files
         run: |
-          cd Task4/frontend
+          cd Task4/apz-pzpi-21-1-boichenko-matvii-task4
           zip -r build.zip build/
 
       - name: Deploy to Azure
         run: |
-          az webapp deployment source config-zip --resource-group myResourceGroup --name myReactApp --src Task4/frontend/build.zip
+          az webapp deployment source config-zip --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.WEB_APP_FRONTEND }} --src Task4/apz-pzpi-21-1-boichenko-matvii-task4/build.zip

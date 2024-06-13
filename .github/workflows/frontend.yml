@@ -1,0 +1,39 @@
+name: Frontend CI/CD
+
+on:
+  push:
+    paths:
+      - 'Task4/frontend/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: |
+          cd Task4/frontend
+          npm install
+
+      - name: Build frontend
+        run: |
+          cd Task4/frontend
+          npm run build
+
+      - name: Archive build files
+        run: |
+          cd Task4/frontend
+          zip -r build.zip build/
+
+      - name: Deploy to Azure
+        run: |
+          az webapp deployment source config-zip --resource-group myResourceGroup --name myReactApp --src Task4/frontend/build.zip

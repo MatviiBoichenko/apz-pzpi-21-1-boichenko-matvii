@@ -1,0 +1,22 @@
+name: Delete Azure Resources
+
+on:
+  workflow_dispatch:
+
+jobs:
+  delete-resources:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Azure CLI Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Delete Azure Resources
+        run: |
+          # Add your Azure resource deletion command here
+          az group delete --name myResourceGroup --yes --no-wait

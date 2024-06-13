@@ -15,9 +15,28 @@ jobs:
 
       - name: Create Azure Resources
         run: |
+          # Create resource group
           az group create --name ${{ secrets.RESOURCE_GROUP }} --location eastus
-          az acr create --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.CONTAINER_REGISTRY }} --sku Basic
+
+          # Create Azure Container Registry with admin enabled
+          az acr create --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.CONTAINER_REGISTRY }} --sku Basic --admin-enabled true
+
+          # Get the ACR admin credentials
+          ACR_USERNAME=$(az acr credential show -n ${{ secrets.CONTAINER_REGISTRY }} --query "username" -o tsv)
+          ACR_PASSWORD=$(az acr credential show -n ${{ secrets.CONTAINER_REGISTRY }} --query "passwords[0].value" -o tsv)
+
+          # Save ACR credentials to GitHub secrets (requires GitHub CLI installed and authenticated)
+          echo "ACR_USERNAME=$ACR_USERNAME" >> $GITHUB_ENV
+          echo "ACR_PASSWORD=$ACR_PASSWORD" >> $GITHUB_ENV
+
+          # Create backend app service plan
           az appservice plan create --name ${{ secrets.APP_SERVICE_PLAN_BACKEND }} --resource-group ${{ secrets.RESOURCE_GROUP }} --sku B1 --is-linux
+
+          # Create backend web app
           az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN_BACKEND }} --name ${{ secrets.WEB_APP_BACKEND }} --deployment-container-image-name ${{ secrets.CONTAINER_REGISTRY }}.azurecr.io/fastapi-backend:latest
+
+          # Create frontend app service plan
           az appservice plan create --name ${{ secrets.APP_SERVICE_PLAN_FRONTEND }} --resource-group ${{ secrets.RESOURCE_GROUP }} --sku B1 --is-linux
+
+          # Create frontend web app
           az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN_FRONTEND }} --name ${{ secrets.WEB_APP_FRONTEND }} --runtime "NODE|14-lts"

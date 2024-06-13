@@ -175,6 +175,23 @@ export type ErrorModel = {
 };
 };
 
+export type GetOrderByIdResponseDto = {
+    id: string;
+    user_id: string;
+    machine_id: string | null;
+    pickup_point_id: string;
+    status: OrderStatus;
+    payment_currency: Currencies;
+    medicines?: Array<MedicineInfoDto>;
+    payment_amount: number;
+    created_at: string;
+    updated_at: string;
+    order_medicines: Array<OrderMedicineResponseDto>;
+    pickup_point: PickupPointResponseDto;
+    machine?: MachineResponseDto | null;
+    machine_pickup_point?: MachinePickupPointResponseDto | null;
+};
+
 export type HTTPValidationError = {
     detail?: Array<ValidationError>;
 };
@@ -314,7 +331,7 @@ export type MedicineResponseDto = {
 export type MedicineSearchDto = {
     simple_filters?: CreateMedicineDtoPartial | null;
     search_substring?: string | null;
-    pagination?: PaginationParams;
+    pagination?: PaginationParams | null;
     order_by: OrderByParams | null;
 };
 
@@ -334,6 +351,14 @@ export type OrderEvent = {
 
 export type OrderEventStatus = 'start' | 'fail' | 'success';
 
+export type OrderMedicineResponseDto = {
+    id: string;
+    order_id: string;
+    medicine_id: string;
+    medicine_count: number;
+    medicine?: MedicineResponseDto | null;
+};
+
 export type OrderResponseDto = {
     id: string;
     user_id: string;
@@ -342,6 +367,9 @@ export type OrderResponseDto = {
     status: OrderStatus;
     payment_currency: Currencies;
     medicines?: Array<MedicineInfoDto>;
+    payment_amount: number;
+    created_at: string;
+    updated_at: string;
 };
 
 export type OrderStatus = 0 | 1 | 2 | 3 | 4 | 5 | 6;
@@ -808,7 +836,7 @@ export type GetOrderApiV1OrdersOrderIdGetData = {
     orderId: string;
 };
 
-export type GetOrderApiV1OrdersOrderIdGetResponse = OrderResponseDto;
+export type GetOrderApiV1OrdersOrderIdGetResponse = GetOrderByIdResponseDto;
 
 export type DeleteOrderApiV1OrdersOrderIdDeleteData = {
     acceptLanguage?: string;
@@ -1669,7 +1697,7 @@ export type $OpenApiTs = {
                 /**
                  * Successful Response
                  */
-                200: OrderResponseDto;
+                200: GetOrderByIdResponseDto;
                 /**
                  * Validation Error
                  */

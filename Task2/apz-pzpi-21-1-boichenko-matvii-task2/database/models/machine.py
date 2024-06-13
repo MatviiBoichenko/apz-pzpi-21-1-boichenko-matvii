@@ -1,3 +1,4 @@
+from __future__ import annotations
 import uuid
 from datetime import datetime
 from decimal import Decimal
@@ -11,6 +12,7 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import TIMESTAMP
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import WriteOnlyMapped
 from sqlalchemy.orm import relationship, mapped_column
 
 from common.enums.tables import PostgresTables
@@ -55,7 +57,7 @@ class Machine(DbBaseModel):
     admin = relationship("User", back_populates="machines")
     machine_medicine_slots = relationship("MachineMedicineSlot", back_populates="machine", lazy="selectin")
     machine_statistics = relationship("MachineStatistic", back_populates="machine", lazy="selectin")
-    machine_pickup_points = relationship("MachinePickupPoint", back_populates="machine", lazy="selectin")
+    machine_pickup_points: WriteOnlyMapped[MachinePickupPoint] = relationship("MachinePickupPoint", back_populates="machine", lazy="selectin")
     orders = relationship("Order", back_populates="machine")
 
 

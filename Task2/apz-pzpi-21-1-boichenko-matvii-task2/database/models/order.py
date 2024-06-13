@@ -14,6 +14,7 @@ from sqlalchemy.dialects.postgresql import TIMESTAMP
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 from pydantic import BaseModel as PydanticBase
 from . import DbBaseModel, Currencies
+from . import Machine
 
 
 class PaymentInfo(PydanticBase):
@@ -49,7 +50,7 @@ class Order(DbBaseModel):
 
     # Relationships
     user = relationship("User", back_populates="orders", lazy="selectin")
-    machine = relationship("Machine", back_populates="orders", lazy="selectin")
+    machine: Mapped[Machine] = relationship(Machine, back_populates="orders", lazy="selectin")
     pickup_point = relationship("PickupPoint", back_populates="orders", lazy="selectin")
     order_medicines: WriteOnlyMapped[OrderMedicine] = relationship("OrderMedicine", back_populates="order")
 

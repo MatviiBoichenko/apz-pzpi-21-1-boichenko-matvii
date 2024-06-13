@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 
 from common.error_messages import ErrorMessages
 from dependencies.user import current_active_user
+from services.order.order_schemas import GetOrderByIdResponseDto
 from services.order.order_service import OrderCrudService
 from services.order.order_schemas import (CreateOrderDto, PatchOrderDto, PutOrderDto, OrderResponseDto)
 
@@ -27,7 +28,7 @@ async def patch_order(order_id: UUID, patch_order_dto: PatchOrderDto,
     return await service.patch_order(order_id, patch_order_dto)
 
 
-@orders_router.get("/{order_id}", response_model=OrderResponseDto)
+@orders_router.get("/{order_id}", response_model=GetOrderByIdResponseDto)
 async def get_order(order_id: UUID, service: OrderCrudService = Depends(OrderCrudService.get_instance)):
     return await service.get_order_by_id(order_id)
 

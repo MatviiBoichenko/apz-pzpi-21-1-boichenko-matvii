@@ -975,7 +975,7 @@ export const patchOrderApiV1OrdersOrderIdPatch = (data: PatchOrderApiV1OrdersOrd
  * @param data The data for the request.
  * @param data.orderId
  * @param data.acceptLanguage
- * @returns OrderResponseDto Successful Response
+ * @returns GetOrderByIdResponseDto Successful Response
  * @throws ApiError
  */
 export const getOrderApiV1OrdersOrderIdGet = (data: GetOrderApiV1OrdersOrderIdGetData): CancelablePromise<GetOrderApiV1OrdersOrderIdGetResponse> => { return __request(OpenAPI, {

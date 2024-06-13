@@ -6,7 +6,7 @@ export const Footer: FC = () => {
     return (
         <VStack textStyle={'footer'} w='100%' h={'50px'} bg={Colors.white} align={'center'} justify={'space-around'}>
           <Box p={'4px'}>
-            © 2021 Copyright:&nbsp;
+            © 2024 Copyright:&nbsp;
             <Link textStyle='h6' href='https://google.com/'>
               MedMobile.com
             </Link>

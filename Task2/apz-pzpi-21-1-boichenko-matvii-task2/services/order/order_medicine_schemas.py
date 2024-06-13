@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from pydantic_partial import create_partial_model
 
 from common.common_schemas import UuidDto
+from services.medicine.schemas import MedicineResponseDto
 
 
 class CreateOrderMedicineDto(BaseModel):
@@ -20,4 +21,4 @@ class PutOrderMedicineDto(CreateOrderMedicineDto):
 
 
 class OrderMedicineResponseDto(CreateOrderMedicineDto, UuidDto):
-    pass
+    medicine: MedicineResponseDto | None = None

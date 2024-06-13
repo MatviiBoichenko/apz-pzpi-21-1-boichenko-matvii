@@ -861,6 +861,99 @@ export const $ErrorModel = {
     title: 'ErrorModel'
 } as const;
 
+export const $GetOrderByIdResponseDto = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        user_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'User Id'
+        },
+        machine_id: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'uuid'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Machine Id'
+        },
+        pickup_point_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Pickup Point Id'
+        },
+        status: {
+            '$ref': '#/components/schemas/OrderStatus'
+        },
+        payment_currency: {
+            '$ref': '#/components/schemas/Currencies'
+        },
+        medicines: {
+            items: {
+                '$ref': '#/components/schemas/MedicineInfoDto'
+            },
+            type: 'array',
+            title: 'Medicines',
+            default: []
+        },
+        payment_amount: {
+            type: 'number',
+            title: 'Payment Amount'
+        },
+        created_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Created At'
+        },
+        updated_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Updated At'
+        },
+        order_medicines: {
+            items: {
+                '$ref': '#/components/schemas/OrderMedicineResponseDto'
+            },
+            type: 'array',
+            title: 'Order Medicines'
+        },
+        pickup_point: {
+            '$ref': '#/components/schemas/PickupPointResponseDto'
+        },
+        machine: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/MachineResponseDto'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        },
+        machine_pickup_point: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/MachinePickupPointResponseDto'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        }
+    },
+    type: 'object',
+    required: ['id', 'user_id', 'machine_id', 'pickup_point_id', 'status', 'payment_currency', 'payment_amount', 'created_at', 'updated_at', 'order_medicines', 'pickup_point'],
+    title: 'GetOrderByIdResponseDto'
+} as const;
+
 export const $HTTPValidationError = {
     properties: {
         detail: {
@@ -1392,9 +1485,12 @@ export const $MedicineSearchDto = {
             title: 'Search Substring'
         },
         pagination: {
-            allOf: [
+            anyOf: [
                 {
                     '$ref': '#/components/schemas/PaginationParams'
+                },
+                {
+                    type: 'null'
                 }
             ],
             default: {
@@ -1475,6 +1571,43 @@ export const $OrderEventStatus = {
     title: 'OrderEventStatus'
 } as const;
 
+export const $OrderMedicineResponseDto = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        order_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Order Id'
+        },
+        medicine_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Medicine Id'
+        },
+        medicine_count: {
+            type: 'integer',
+            title: 'Medicine Count'
+        },
+        medicine: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/MedicineResponseDto'
+                },
+                {
+                    type: 'null'
+                }
+            ]
+        }
+    },
+    type: 'object',
+    required: ['id', 'order_id', 'medicine_id', 'medicine_count'],
+    title: 'OrderMedicineResponseDto'
+} as const;
+
 export const $OrderResponseDto = {
     properties: {
         id: {
@@ -1517,10 +1650,24 @@ export const $OrderResponseDto = {
             type: 'array',
             title: 'Medicines',
             default: []
+        },
+        payment_amount: {
+            type: 'number',
+            title: 'Payment Amount'
+        },
+        created_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Created At'
+        },
+        updated_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Updated At'
         }
     },
     type: 'object',
-    required: ['id', 'user_id', 'machine_id', 'pickup_point_id', 'status', 'payment_currency'],
+    required: ['id', 'user_id', 'machine_id', 'pickup_point_id', 'status', 'payment_currency', 'payment_amount', 'created_at', 'updated_at'],
     title: 'OrderResponseDto'
 } as const;
 

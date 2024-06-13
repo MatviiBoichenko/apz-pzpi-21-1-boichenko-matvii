@@ -1,16 +1,24 @@
 import asyncio
-from datetime import datetime, timezone
+from datetime import timedelta
+from datetime import timezone
 from uuid import UUID
 
-from fastapi import HTTPException, Depends
+from fastapi import Depends
+from fastapi import HTTPException
+from sqlalchemy import and_
+from sqlalchemy import asc
+from sqlalchemy import desc
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from common.error_messages import ErrorMessages
 from common.utils.mapping import db_row_to_pydantic
 from database import db
-from database.models import Order, Medicine
+from database.models import MachinePickupPoint
+from database.models import Medicine
+from database.models import Order
 from database.models import OrderMedicine
 from services.base_service import BaseCrudService
+from services.medicine.schemas import MedicineResponseDto
 from services.mqtt.mqtt_handlers_schemas import NewOrderRequest
 from services.mqtt.mqtt_handlers_service import MQTTHandlersService
 from services.order.order_schemas import *
@@ -84,7 +92,29 @@ class OrderCrudService(BaseCrudService[Order]):
         if not order:
             raise HTTPException(status_code=404, detail=ErrorMessages.order.ORDER_NOT_FOUND)
 
-        return await db_row_to_pydantic(order, OrderResponseDto)
+        resp = await db_row_to_pydantic(order, GetOrderByIdResponseDto, False)
+
+        resp.order_medicines = []
+        db_medicines: list[OrderMedicine] = (await self.db.scalars(order.order_medicines.select())).all()
+        for db_med in db_medicines:
+            order_medicine = await db_row_to_pydantic(db_med, OrderMedicineResponseDto)
+            order_medicine.medicine = await db_row_to_pydantic(db_med.medicine, MedicineResponseDto)
+            resp.order_medicines.append(order_medicine)
+
+        resp.pickup_point = await db_row_to_pydantic(order.pickup_point, PickupPointResponseDto)
+        if order.machine:
+            resp.machine = await db_row_to_pydantic(order.machine, MachineResponseDto)
+            pickup_point = (await self.db.scalars(
+                order.machine.machine_pickup_points.select()
+                .where(and_(MachinePickupPoint.pickup_point_id == order.pickup_point_id,
+                            MachinePickupPoint.deliver_orders,
+                            MachinePickupPoint.arrival_at >= datetime.now(timezone.utc) + timedelta(days=1)))
+                .order_by(asc(MachinePickupPoint.arrival_at))
+            )).first()
+            if pickup_point:
+                resp.machine_pickup_point = await db_row_to_pydantic(pickup_point, MachinePickupPointResponseDto)
+
+        return resp
 
     async def delete_order_by_id(self, order_id: UUID):
         success: bool = await Order.delete(self.db, {"id": order_id})

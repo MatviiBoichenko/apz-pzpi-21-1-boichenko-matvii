@@ -19,15 +19,19 @@ class AdminAuthBackend(AuthenticationBackend):
     async def login(self, request: Request) -> bool:
         form = await request.form()
         email, password = form["username"], form["password"]
+        try:
+            async with db.create_async_session() as session:
+                user_manager = UserManager(SQLAlchemyUserDatabase(session, models.User))
+                user = await user_manager.get_by_email(email)
+                print("user", user)
+                res: bool = user_manager.password_helper.verify_and_update(password, user.hashed_password)[0]
+                res &= user.is_superuser
+                request.session.update({"token": user.hashed_password})
 
-        async with db.create_async_session() as session:
-            user_manager = UserManager(SQLAlchemyUserDatabase(session, models.User))
-            user = await user_manager.get_by_email(email)
-            print("user", user)
-            res: bool = user_manager.password_helper.verify_and_update(password, user.hashed_password)[0]
-            request.session.update({"token": user.hashed_password})
-
-        return res
+            return res
+        except BaseException as e:
+            print('Admin auth error', e)
+            return False
 
     async def logout(self, request: Request) -> bool:
         # Usually you'd want to just clear the session

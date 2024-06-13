@@ -43,7 +43,6 @@ const Cart = () => {
     useState<PickupPointResponseDto[]>([]);
   const [machines, setMachines] =
     useState<MachineResponseDto[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const {isOpen, onOpen, onClose} = useDisclosure();
   const {isOpen: isMachineOpen, onOpen: onMachineOpen, onClose: onMachineClose} = useDisclosure();
@@ -108,7 +107,7 @@ const Cart = () => {
       user_id: user?.id || '',
       machine_id: machine ? machine.id : null,
       pickup_point_id: pickupPoint.id,
-      status: 2,
+      status: machine ? 2 : 1, // In preparing if machine specified, just payed if not
       payment_currency: 'EUR',
       medicines,
     };
@@ -138,11 +137,8 @@ const Cart = () => {
 
   useEffect(() => {
     fetchPickupPoints();
-  }, [searchTerm]);
-
-  useEffect(() => {
     fetchMachines();
-  }, [cart]);
+  }, []);
 
   return (
     <Center w='full' h='full'>

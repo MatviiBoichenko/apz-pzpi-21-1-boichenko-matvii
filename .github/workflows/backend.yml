@@ -3,7 +3,7 @@ name: Backend CI/CD
 on:
   push:
     paths:
-      - 'Task2/backend/**'
+      - 'Task2/apz-pzpi-21-1-boichenko-matvii-task2/**'
   workflow_dispatch:
 
 jobs:
@@ -21,25 +21,24 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd Task2/backend
+          cd Task2/apz-pzpi-21-1-boichenko-matvii-task2
           pip install -r requirements.txt
 
       - name: Run tests
         run: |
-          cd Task2/backend
+          cd Task2/apz-pzpi-21-1-boichenko-matvii-task2
           # Add your test command here
           pytest
 
       - name: Build Docker image
         run: |
-          cd Task2/backend
-          docker build -t your-docker-repo/fastapi-backend:latest .
+          cd Task2/apz-pzpi-21-1-boichenko-matvii-task2
+          docker build -t ${{ secrets.CONTAINER_REGISTRY }}.azurecr.io/fastapi-backend:latest .
 
       - name: Push Docker image
         run: |
-          echo "${{ secrets.ACR_PASSWORD }}" | docker login myContainerRegistry.azurecr.io -u "${{ secrets.ACR_USERNAME }}" --password-stdin
-          docker tag your-docker-repo/fastapi-backend:latest myContainerRegistry.azurecr.io/fastapi-backend:latest
-          docker push myContainerRegistry.azurecr.io/fastapi-backend:latest
+          echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ secrets.CONTAINER_REGISTRY }}.azurecr.io -u "${{ secrets.ACR_USERNAME }}" --password-stdin
+          docker push ${{ secrets.CONTAINER_REGISTRY }}.azurecr.io/fastapi-backend:latest
 
   deploy:
     needs: build
@@ -56,4 +55,4 @@ jobs:
 
       - name: Deploy to Azure
         run: |
-          az webapp config container set --name myFastAPIApp --resource-group myResourceGroup --docker-custom-image-name myContainerRegistry.azurecr.io/fastapi-backend:latest --docker-registry-server-url https://myContainerRegistry.azurecr.io --docker-registry-server-user ${{ secrets.ACR_USERNAME }} --docker-registry-server-password ${{ secrets.ACR_PASSWORD }}
+          az webapp config container set --name ${{ secrets.WEB_APP_BACKEND }} --resource-group ${{ secrets.RESOURCE_GROUP }} --docker-custom-image-name ${{ secrets.CONTAINER_REGISTRY }}.azurecr.io/fastapi-backend:latest --docker-registry-server-url https://{{ secrets.CONTAINER_REGISTRY }}.azurecr.io --docker-registry-server-user ${{ secrets.ACR_USERNAME }} --docker-registry-server-password ${{ secrets.ACR_PASSWORD }}

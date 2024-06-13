@@ -1,0 +1,23 @@
+name: Create Azure Resources
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-resources:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Azure CLI Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Create Azure Resources
+        run: |
+          az group create --name myResourceGroup --location eastus
+          az acr create --resource-group myResourceGroup --name myContainerRegistry --sku Basic
+          az appservice plan create --name myAppServicePlan --resource-group myResourceGroup --sku B1 --is-linux
+          az webapp create --resource-group myResourceGroup --plan myAppServicePlan --name myFastAPIApp --deployment-container-image-name myContainerRegistry.azurecr.io/fastapi-backend:latest
+          az appservice plan create --name myFrontendAppServicePlan --resource-group myResourceGroup --sku B1 --is-linux
+          az webapp create --resource-group myResourceGroup --plan myFrontendAppServicePlan --name myReactApp --runtime "NODE|14-lts"

@@ -15,9 +15,9 @@ jobs:
 
       - name: Create Azure Resources
         run: |
-          az group create --name myResourceGroup --location eastus
-          az acr create --resource-group myResourceGroup --name myContainerRegistry --sku Basic
-          az appservice plan create --name myAppServicePlan --resource-group myResourceGroup --sku B1 --is-linux
-          az webapp create --resource-group myResourceGroup --plan myAppServicePlan --name myFastAPIApp --deployment-container-image-name myContainerRegistry.azurecr.io/fastapi-backend:latest
-          az appservice plan create --name myFrontendAppServicePlan --resource-group myResourceGroup --sku B1 --is-linux
-          az webapp create --resource-group myResourceGroup --plan myFrontendAppServicePlan --name myReactApp --runtime "NODE|14-lts"
+          az group create --name ${{ secrets.RESOURCE_GROUP }} --location eastus
+          az acr create --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.CONTAINER_REGISTRY }} --sku Basic
+          az appservice plan create --name ${{ secrets.APP_SERVICE_PLAN_BACKEND }} --resource-group ${{ secrets.RESOURCE_GROUP }} --sku B1 --is-linux
+          az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN_BACKEND }} --name ${{ secrets.WEB_APP_BACKEND }} --deployment-container-image-name ${{ secrets.CONTAINER_REGISTRY }}.azurecr.io/fastapi-backend:latest
+          az appservice plan create --name ${{ secrets.APP_SERVICE_PLAN_FRONTEND }} --resource-group ${{ secrets.RESOURCE_GROUP }} --sku B1 --is-linux
+          az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN_FRONTEND }} --name ${{ secrets.WEB_APP_FRONTEND }} --runtime "NODE|14-lts"

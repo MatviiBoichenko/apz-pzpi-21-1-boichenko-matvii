@@ -36,4 +36,4 @@ jobs:
           az appservice plan create --name ${{ secrets.APP_SERVICE_PLAN_FRONTEND }} --resource-group ${{ secrets.RESOURCE_GROUP }} --sku B1 --is-linux
 
           # Create frontend web app with correct runtime
-          az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN_FRONTEND }} --name ${{ secrets.WEB_APP_FRONTEND }} --runtime "NODE|14-lts"
+          az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN_FRONTEND }} --name ${{ secrets.WEB_APP_FRONTEND }} --runtime "NODE:16-lts"

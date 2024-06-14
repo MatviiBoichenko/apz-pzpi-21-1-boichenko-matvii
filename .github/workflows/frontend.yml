@@ -33,11 +33,11 @@ jobs:
           cd Task4/apz-pzpi-21-1-boichenko-matvii-task4
           npm run build
 
-      - name: Archive build files
-        run: |
-          cd Task4/apz-pzpi-21-1-boichenko-matvii-task4
-          zip -r build.zip dist/
-
       - name: Deploy to Azure Static Web App
-        run: |
-          az staticwebapp deploy --name $STATIC_WEB_APP --resource-group $RESOURCE_GROUP --src Task4/apz-pzpi-21-1-boichenko-matvii-task4/dist --token ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }} --verbose
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          action: 'upload'
+          app_location: 'Task4/apz-pzpi-21-1-boichenko-matvii-task4'
+          output_location: 'Task4/apz-pzpi-21-1-boichenko-matvii-task4/dist'
+          

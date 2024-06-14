@@ -33,7 +33,12 @@ jobs:
         run: |
           cd Task4/apz-pzpi-21-1-boichenko-matvii-task4
           zip -r build.zip dist/
-
+      
+      - name: Azure CLI Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
       - name: Deploy to Azure
         run: |
           az webapp deployment source config-zip --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.WEB_APP_FRONTEND }} --src Task4/apz-pzpi-21-1-boichenko-matvii-task4/build.zip

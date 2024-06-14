@@ -18,11 +18,12 @@ from services.mqtt.mqtt_service import mqtt_service
 async def lifespan(app: FastAPI):
     db.connect()
 
-    db.init_load_medecines()
     async with db.async_engine.connect() as conn:
         await conn.execute(text(f"CREATE SCHEMA IF NOT EXISTS {settings.DATABASE_SCHEMA}"))
         await conn.run_sync(models.DbBaseModel.metadata.create_all)
         await conn.commit()
+
+    db.init_load_medecines()
 
     mqtt_service.connect()
 

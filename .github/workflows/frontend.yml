@@ -10,6 +10,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      RESOURCE_GROUP: myResourceGroup
+      STATIC_WEB_APP: myStaticWebApp
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      AZURE_STATIC_WEB_APPS_API_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -17,7 +23,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '20'
+          node-version: '16'
 
       - name: Install dependencies
         run: |
@@ -32,13 +38,8 @@ jobs:
       - name: Archive build files
         run: |
           cd Task4/apz-pzpi-21-1-boichenko-matvii-task4
-          zip -r build.zip dist/
-      
-      - name: Azure CLI Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
-      - name: Deploy to Azure
+          zip -r build.zip build/
+
+      - name: Deploy to Azure Static Web App
         run: |
-          az webapp deployment source config-zip --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.WEB_APP_FRONTEND }} --src Task4/apz-pzpi-21-1-boichenko-matvii-task4/build.zip
+          az staticwebapp upload --name $STATIC_WEB_APP --resource-group $RESOURCE_GROUP --source Task4/apz-pzpi-21-1-boichenko-matvii-task4/build.zip --verbose

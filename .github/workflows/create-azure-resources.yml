@@ -27,12 +27,6 @@ jobs:
           echo "ACR_USERNAME=$(az acr credential show -n ${{ secrets.CONTAINER_REGISTRY }} --query 'username' -o tsv)" >> $GITHUB_ENV
           echo "ACR_PASSWORD=$(az acr credential show -n ${{ secrets.CONTAINER_REGISTRY }} --query 'passwords[0].value' -o tsv)" >> $GITHUB_ENV
 
-      - name: Retry App Service Plan Creation
-        run: |
-          for i in {1..5}; do
-            az appservice plan create --name ${{ secrets.APP_SERVICE_PLAN }} --resource-group ${{ secrets.RESOURCE_GROUP }} --sku B1 --is-linux && break || sleep 60;
-          done
-
       - name: Retry Backend Web App Creation
         run: |
           for i in {1..5}; do

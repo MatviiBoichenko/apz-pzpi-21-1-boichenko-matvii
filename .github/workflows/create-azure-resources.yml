@@ -15,10 +15,7 @@ jobs:
 
       - name: Create Azure Resources
         run: |
-          # Create resource group
           az group create --name ${{ secrets.RESOURCE_GROUP }} --location eastus
-
-          # Create Azure Container Registry with admin enabled
           az acr create --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.CONTAINER_REGISTRY }} --sku Basic --admin-enabled true
 
           # Get the ACR admin credentials
@@ -38,5 +35,5 @@ jobs:
           # Create frontend app service plan
           az appservice plan create --name ${{ secrets.APP_SERVICE_PLAN_FRONTEND }} --resource-group ${{ secrets.RESOURCE_GROUP }} --sku B1 --is-linux
 
-          # Create frontend web app
+          # Create frontend web app with correct runtime
           az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN_FRONTEND }} --name ${{ secrets.WEB_APP_FRONTEND }} --runtime "NODE|14-lts"

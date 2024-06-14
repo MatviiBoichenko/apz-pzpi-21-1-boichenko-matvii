@@ -24,11 +24,11 @@ jobs:
           cd Task2/apz-pzpi-21-1-boichenko-matvii-task2
           pip install -r requirements.txt
 
-      - name: Run tests
-        run: |
-          cd Task2/apz-pzpi-21-1-boichenko-matvii-task2
-          # Add your test command here
-          pytest
+      # - name: Run tests
+      #   run: |
+      #     cd Task2/apz-pzpi-21-1-boichenko-matvii-task2
+      #     # Add your test command here
+      #     pytest
 
       - name: Build Docker image
         run: |

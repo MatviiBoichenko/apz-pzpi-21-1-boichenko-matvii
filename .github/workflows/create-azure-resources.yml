@@ -8,12 +8,12 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      RESOURCE_GROUP: myResourceGroup
-      CONTAINER_REGISTRY: myContainerRegistry
-      APP_SERVICE_PLAN: myAppServicePlan
-      WEB_APP_BACKEND: myBackendWebApp
-      STATIC_WEB_APP: myStaticWebApp
-      DB_SERVER: myDbServer
+      RESOURCE_GROUP: matvii-nure-resources
+      CONTAINER_REGISTRY: matviiacr
+      APP_SERVICE_PLAN: matvii-nure
+      WEB_APP_BACKEND: matvi-nure-fastapi
+      STATIC_WEB_APP: matvi-nure-react
+      DB_SERVER: matvii-nure-db
       DATABASE_USER: postgres
       DATABASE_PASSWORD: 1qaz2wsx
       DATABASE_PORT: 5432

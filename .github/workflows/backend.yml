@@ -10,6 +10,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      RESOURCE_GROUP: matvii-nure-resources
+      CONTAINER_REGISTRY: matviiacr
+      APP_SERVICE_PLAN: matvii-nure
+      WEB_APP_BACKEND: matvi-nure-fastapi
+      STATIC_WEB_APP: matvi-nure-react
+      DB_SERVER: matvii-nure-db
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: 1qaz2wsx
+      DATABASE_PORT: 5432
+      DATABASE_NAME: postgres
+      DATABASE_SCHEMA: medmobile
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -33,12 +46,12 @@ jobs:
       - name: Build Docker image
         run: |
           cd Task2/apz-pzpi-21-1-boichenko-matvii-task2
-          docker build -t ${{ secrets.CONTAINER_REGISTRY }}.azurecr.io/fastapi-backend:latest .
+          docker build -t $CONTAINER_REGISTRY.azurecr.io/fastapi-backend:latest .
 
       - name: Push Docker image
         run: |
-          echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ secrets.CONTAINER_REGISTRY }}.azurecr.io -u "${{ secrets.ACR_USERNAME }}" --password-stdin
-          docker push ${{ secrets.CONTAINER_REGISTRY }}.azurecr.io/fastapi-backend:latest
+          echo "${{ secrets.ACR_PASSWORD }}" | docker login $CONTAINER_REGISTRY.azurecr.io -u "${{ secrets.ACR_USERNAME }}" --password-stdin
+          docker push $CONTAINER_REGISTRY.azurecr.io/fastapi-backend:latest
 
   deploy:
     needs: build
@@ -55,4 +68,4 @@ jobs:
 
       - name: Deploy to Azure
         run: |
-          az webapp config container set --name ${{ secrets.WEB_APP_BACKEND }} --resource-group ${{ secrets.RESOURCE_GROUP }} --docker-custom-image-name ${{ secrets.CONTAINER_REGISTRY }}.azurecr.io/fastapi-backend:latest --docker-registry-server-url https://{{ secrets.CONTAINER_REGISTRY }}.azurecr.io --docker-registry-server-user ${{ secrets.ACR_USERNAME }} --docker-registry-server-password ${{ secrets.ACR_PASSWORD }}
+          az webapp config container set --name $WEB_APP_BACKEND --resource-group $RESOURCE_GROUP --docker-custom-image-name $CONTAINER_REGISTRY.azurecr.io/fastapi-backend:latest --docker-registry-server-url https://$CONTAINER_REGISTRY.azurecr.io --docker-registry-server-user ${{ secrets.ACR_USERNAME }} --docker-registry-server-password ${{ secrets.ACR_PASSWORD }}

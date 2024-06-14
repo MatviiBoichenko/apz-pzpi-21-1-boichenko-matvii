@@ -1,4 +1,4 @@
-import {defineConfig, loadEnv} from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from "node:path";
 
@@ -13,7 +13,10 @@ export default defineConfig(({command, mode}) => {
   return {
     define: {
       'process.env.ENVIRONMENT': JSON.stringify(mode),
-      'process.env': env
+      'process.env': env,
+      'process.env.API_URL': mode === 'production'
+        ? 'https://matvi-nure-fastapi.azurewebsites.net/'
+        : 'http://localhost:8000'
     },
     plugins: [react()],
     server: {

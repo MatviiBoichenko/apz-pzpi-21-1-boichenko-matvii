@@ -16,7 +16,7 @@ export function Main(props: unknown) {
     if (!OpenAPI.TOKEN) {
       OpenAPI.TOKEN = userStore.token || '';
     }
-    OpenAPI.BASE = process.env.API_URL || 'http://localhost:8000';
+    OpenAPI.BASE = process.env.API_URL!;
     OpenAPI.interceptors.request.use((config) => {
       // if (!config.headers?.Authorization) {
       //   config.headers = {...config.headers, Authorization: `Bearer ${OpenAPI.TOKEN}`};

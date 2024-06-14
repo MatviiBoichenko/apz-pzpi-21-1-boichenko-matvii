@@ -40,4 +40,4 @@ jobs:
 
       - name: Deploy to Azure Static Web App
         run: |
-          az staticwebapp upload --name $STATIC_WEB_APP --resource-group $RESOURCE_GROUP --source Task4/apz-pzpi-21-1-boichenko-matvii-task4/build.zip --verbose
+          az staticwebapp deploy --name $STATIC_WEB_APP --resource-group $RESOURCE_GROUP --src Task4/apz-pzpi-21-1-boichenko-matvii-task4/dist --token ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }} --verbose

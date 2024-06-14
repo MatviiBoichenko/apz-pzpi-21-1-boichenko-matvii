@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     DEBUG: bool = MODE == ModeEnum.development
     API_VERSION: str = "v1"
     API_V1_STR: str = f"/api/{API_VERSION}"
-    PROJECT_NAME: str
+    PROJECT_NAME: str = 'DrinkPointAPI'
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 1  # 1 hour
     REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 100  # 100 days
     DATABASE_USER: str
@@ -38,14 +38,14 @@ class Settings(BaseSettings):
     POOL_SIZE: int = max(DB_POOL_SIZE // WEB_CONCURRENCY, 5)
     ASYNC_DATABASE_URI: str | None
     SYNC_DATABASE_URI: URL | None
-    PASSWORD_TOKEN_SECRET: str
-    VERIFICATION_TOKEN_SECRET: str
-    JWT_SECRET: str
-    API_HASH_SECRET_KEY: str
+    PASSWORD_TOKEN_SECRET: str = 'Qwerty1234'
+    VERIFICATION_TOKEN_SECRET: str = 'Qwerty1234'
+    JWT_SECRET: str = 'Qwerty1234567890'
+    API_HASH_SECRET_KEY: str = 'BEdQVei3kmWJGhu4qn5uncL8VXjER8'
 
-    MQTT_USER: str
-    MQTT_PASS: str
-    MQTT_BROKER_HOST: str
+    MQTT_USER: str | None = None
+    MQTT_PASS: str | None = None
+    MQTT_BROKER_HOST: str | None = None
     MQTT_BROKER_PORT: int = 1883
 
     @field_validator("DATABASE_PASSWORD", mode="before")

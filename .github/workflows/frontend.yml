@@ -31,8 +31,12 @@ jobs:
       - name: Build frontend
         run: |
           cd Task4/apz-pzpi-21-1-boichenko-matvii-task4
-          npm run build
+          tsc && vite build
 
+      - name: List build directory contents
+        run: |
+          ls -la Task4/apz-pzpi-21-1-boichenko-matvii-task4/dist
+      
       - name: Deploy to Azure Static Web App
         uses: Azure/static-web-apps-deploy@v1
         with:

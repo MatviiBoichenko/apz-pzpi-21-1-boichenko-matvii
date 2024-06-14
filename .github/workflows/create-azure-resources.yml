@@ -6,6 +6,7 @@ on:
 jobs:
   create-resources:
     runs-on: ubuntu-latest
+
     steps:
       - name: Azure CLI Login
         uses: azure/login@v1
@@ -29,23 +30,17 @@ jobs:
       - name: Retry App Service Plan Creation
         run: |
           for i in {1..5}; do
-            az appservice plan create --name ${{ secrets.APP_SERVICE_PLAN_BACKEND }} --resource-group ${{ secrets.RESOURCE_GROUP }} --sku B1 --is-linux && break || sleep 60;
+            az appservice plan create --name ${{ secrets.APP_SERVICE_PLAN }} --resource-group ${{ secrets.RESOURCE_GROUP }} --sku B1 --is-linux && break || sleep 60;
           done
 
       - name: Retry Backend Web App Creation
         run: |
           for i in {1..5}; do
-            az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN_BACKEND }} --name ${{ secrets.WEB_APP_BACKEND }} --deployment-container-image-name ${{ secrets.CONTAINER_REGISTRY }}.azurecr.io/fastapi-backend:latest && break || sleep 60;
-          done
-
-      - name: Retry Frontend App Service Plan Creation
-        run: |
-          for i in {1..5}; do
-            az appservice plan create --name ${{ secrets.APP_SERVICE_PLAN_FRONTEND }} --resource-group ${{ secrets.RESOURCE_GROUP }} --sku B1 --is-linux && break || sleep 60;
+            az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN }} --name ${{ secrets.WEB_APP_BACKEND }} --deployment-container-image-name ${{ secrets.CONTAINER_REGISTRY }}.azurecr.io/fastapi-backend:latest && break || sleep 60;
           done
 
       - name: Retry Frontend Web App Creation
         run: |
           for i in {1..5}; do
-            az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN_FRONTEND }} --name ${{ secrets.WEB_APP_FRONTEND }} --runtime "NODE:16-lts" && break || sleep 60;
+            az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN }} --name ${{ secrets.WEB_APP_FRONTEND }} --runtime "NODE:16-lts" && break || sleep 60;
           done

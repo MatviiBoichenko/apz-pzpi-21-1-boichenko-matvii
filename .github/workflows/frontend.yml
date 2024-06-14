@@ -49,4 +49,4 @@ jobs:
           action: 'upload'
           app_location: 'Task4/apz-pzpi-21-1-boichenko-matvii-task4'
           output_location: '/dist'
-          routes_location: '/'
+          routes_location: 'Task4/apz-pzpi-21-1-boichenko-matvii-task4'

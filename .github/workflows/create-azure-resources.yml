@@ -46,7 +46,7 @@ jobs:
 
       - name: Create PostgreSQL Database
         run: |
-          az postgres flexible-server create --resource-group $RESOURCE_GROUP --name $DB_SERVER --admin-user $DATABASE_USER --admin-password $DATABASE_PASSWORD --tier Burstable --sku-name Standard_B1ms --version 13
+          az postgres flexible-server create --resource-group $RESOURCE_GROUP --name $DB_SERVER --admin-user $DATABASE_USER --admin-password $DATABASE_PASSWORD --tier Burstable --sku-name Standard_B1ms --version 13 --yes
 
       - name: Configure PostgreSQL Firewall
         run: |

@@ -39,14 +39,24 @@ class MQTTService:
         self.logger.debug("Message Published.")
 
     def connect(self):
+        if not self.broker_address:
+            print("No broker address, failed to connect")
+            return False
+
         self.client.loop_start()
         print("BROKER", self.broker_address, self.port)
         self.client.connect(self.broker_address, self.port)
+
+        return True
 
     def disconnect(self):
         self.client.disconnect()
 
     def publish(self, topic: str, message: str | bytes | dict, qos: int = 0, retain: bool = False) -> bool:
+        if not self.broker_address:
+            print("No broker address, failed to publish")
+            return False
+
         if isinstance(message, dict):
             message = json.dumps(message)
 

@@ -8,6 +8,7 @@ from starlette.responses import JSONResponse
 
 from config import settings
 from database import db
+from database import models
 from extensions.babel import babel
 from logger import configure_logger
 from services.mqtt.mqtt_service import mqtt_service
@@ -20,7 +21,7 @@ async def lifespan(app: FastAPI):
     db.init_load_medecines()
     async with db.async_engine.connect() as conn:
         await conn.execute(text(f"CREATE SCHEMA IF NOT EXISTS {settings.DATABASE_SCHEMA}"))
-        # await conn.run_sync(models.DbBaseModel.metadata.create_all)
+        await conn.run_sync(models.DbBaseModel.metadata.create_all)
         await conn.commit()
 
     mqtt_service.connect()

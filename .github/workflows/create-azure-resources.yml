@@ -27,14 +27,20 @@ jobs:
           echo "ACR_USERNAME=$(az acr credential show -n ${{ secrets.CONTAINER_REGISTRY }} --query 'username' -o tsv)" >> $GITHUB_ENV
           echo "ACR_PASSWORD=$(az acr credential show -n ${{ secrets.CONTAINER_REGISTRY }} --query 'passwords[0].value' -o tsv)" >> $GITHUB_ENV
 
+      - name: Retry App Service Plan Creation
+        run: |
+          for i in {1..3}; do
+            az appservice plan create --name ${{ secrets.APP_SERVICE_PLAN }} --resource-group ${{ secrets.RESOURCE_GROUP }} --sku B1 --is-linux && break || sleep 60;
+          done
+
       - name: Retry Backend Web App Creation
         run: |
-          for i in {1..5}; do
+          for i in {1..3}; do
             az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN }} --name ${{ secrets.WEB_APP_BACKEND }} --deployment-container-image-name ${{ secrets.CONTAINER_REGISTRY }}.azurecr.io/fastapi-backend:latest && break || sleep 60;
           done
 
       - name: Retry Frontend Web App Creation
         run: |
-          for i in {1..5}; do
+          for i in {1..3}; do
             az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN }} --name ${{ secrets.WEB_APP_FRONTEND }} --runtime "NODE:16-lts" && break || sleep 60;
           done

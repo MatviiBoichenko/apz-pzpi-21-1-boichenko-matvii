@@ -30,7 +30,9 @@ jobs:
 
       - name: Build frontend
         run: |
+          ls
           cd Task4/apz-pzpi-21-1-boichenko-matvii-task4
+          ls
           tsc && vite build
 
       - name: List build directory contents

@@ -64,4 +64,5 @@ jobs:
 
       - name: Create Azure Static Web App for Frontend
         run: |
-          az staticwebapp create --resource-group $RESOURCE_GROUP --name $STATIC_WEB_APP --location EastUS --branch main --source ./Task4/apz-pzpi-21-1-boichenko-matvii-task4 --output-location "build"
+          az staticwebapp create --resource-group $RESOURCE_GROUP --name $STATIC_WEB_APP --location EastUS --sku Free
+          

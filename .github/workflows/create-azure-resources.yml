@@ -8,17 +8,17 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      RESOURCE_GROUP: matvii-nure-resources
-      CONTAINER_REGISTRY: matviiacr
-      APP_SERVICE_PLAN: matvii-nure
-      WEB_APP_BACKEND: matvi-nure-fastapi
-      STATIC_WEB_APP: matvi-nure-react
-      DB_SERVER: matvii-nure-db
-      DATABASE_USER: postgres
-      DATABASE_PASSWORD: 1qaz2wsx
-      DATABASE_PORT: 5432
-      DATABASE_NAME: postgres
-      DATABASE_SCHEMA: medmobile
+    	RESOURCE_GROUP: matvii-nure-resources
+    	CONTAINER_REGISTRY: matviiacr
+    	APP_SERVICE_PLAN: matvii-nure
+    	WEB_APP_BACKEND: matvi-nure-fastapi
+    	STATIC_WEB_APP: matvi-nure-react
+    	DB_SERVER: matvii-nure-db
+    	DATABASE_USER: postgres
+    	DATABASE_PASSWORD: 1qaz2wsx
+    	DATABASE_PORT: 5432
+    	DATABASE_NAME: postgres
+    	DATABASE_SCHEMA: medmobile
 
     steps:
       - name: Azure CLI Login
@@ -46,7 +46,7 @@ jobs:
 
       - name: Create PostgreSQL Database
         run: |
-          az postgres flexible-server create --resource-group $RESOURCE_GROUP --name $DB_SERVER --admin-user $DATABASE_USER --admin-password $DATABASE_PASSWORD --sku-name B_Standard_B1ms --version 13
+          az postgres flexible-server create --resource-group $RESOURCE_GROUP --name $DB_SERVER --admin-user $DATABASE_USER --admin-password $DATABASE_PASSWORD --tier Burstable --sku-name Standard_B1ms --version 13
 
       - name: Configure PostgreSQL Firewall
         run: |

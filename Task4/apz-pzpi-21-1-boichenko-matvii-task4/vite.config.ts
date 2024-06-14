@@ -9,8 +9,8 @@ export default defineConfig(({command, mode}) => {
     ...loadEnv(process.env.REACT_APP_ENV || 'development', process.cwd(), '')
   };
   console.log(command, mode, process.env.REACT_APP_ENV);
-  env.ENVIRONMENT = JSON.stringify(mode);
-  env.API_URL = mode === 'production' ? 'https://matvi-nure-fastapi.azurewebsites.net/' : 'http://localhost:8000';
+  env.ENVIRONMENT = mode;
+  env.API_URL = mode === 'production' ? 'https://matvi-nure-fastapi.azurewebsites.net' : 'http://localhost:8000';
 
   return {
     define: {

@@ -98,7 +98,7 @@ const Cart = () => {
 
     setIsLoading(true);
 
-    const medicines: MedicineInfoDto[] = cart.medicines.map((m) => ({
+    const medicines: MedicineInfoDto[] = (cart.medicines || []).map((m) => ({
       id: m.id,
       count: m.count,
     }));
@@ -193,10 +193,10 @@ const Cart = () => {
         {/*    Change*/}
         {/*  </Button>*/}
         {/*</HStack>*/}
-        <Text>Total price: {cart.medicines.reduce((totalSum, cur) => {
+        <Text>Total price: {(cart.medicines || []).reduce((totalSum, cur) => {
           return totalSum + cur.count * cur.price;
         }, 0).toFixed(2)} {cart.payment_currency}</Text>
-        <Button isDisabled={cart.medicines.length < 1}
+        <Button isDisabled={cart.medicines && cart.medicines.length < 1}
                 w='full'
                 colorScheme='green'
                 onClick={handleCreateOrder}

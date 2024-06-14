@@ -18,9 +18,9 @@ export function Main(props: unknown) {
     }
     OpenAPI.BASE = process.env.API_URL!;
     OpenAPI.interceptors.request.use((config) => {
-      // if (!config.headers?.Authorization) {
-      //   config.headers = {...config.headers, Authorization: `Bearer ${OpenAPI.TOKEN}`};
-      // }
+      if (!config.headers?.Authorization) {
+        config.headers = {...config.headers, Authorization: `Bearer ${OpenAPI.TOKEN}`};
+      }
       return config;
     });
     OpenAPI.interceptors.response.use((resp) => {

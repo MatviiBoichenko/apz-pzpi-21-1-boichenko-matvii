@@ -71,5 +71,5 @@ jobs:
 
       - name: Create Azure Static Web App
         run: |
-          az staticwebapp create --resource-group $RESOURCE_GROUP --name $STATIC_WEB_APP --location EastUS --sku Free
+          az staticwebapp create --resource-group $RESOURCE_GROUP --name $STATIC_WEB_APP --location eastus2 --sku Free
           

@@ -28,16 +28,20 @@ jobs:
           cd Task4/apz-pzpi-21-1-boichenko-matvii-task4
           npm install
 
+      - name: List directory contents before build
+        run: |
+          cd Task4/apz-pzpi-21-1-boichenko-matvii-task4
+          ls -la
+
       - name: Build frontend
         run: |
           cd Task4/apz-pzpi-21-1-boichenko-matvii-task4
-          ls
           npm run build
 
-      - name: List build directory contents
+      - name: List build directory contents after build
         run: |
           ls -la Task4/apz-pzpi-21-1-boichenko-matvii-task4/dist
-      
+
       - name: Deploy to Azure Static Web App
         uses: Azure/static-web-apps-deploy@v1
         with:
@@ -45,4 +49,3 @@ jobs:
           action: 'upload'
           app_location: 'Task4/apz-pzpi-21-1-boichenko-matvii-task4'
           output_location: 'Task4/apz-pzpi-21-1-boichenko-matvii-task4/dist'
-          

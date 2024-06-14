@@ -31,5 +31,8 @@ export default defineConfig(({command, mode}) => {
         '@components': path.resolve(__dirname, 'src/components'),
       },
     },
+    build: {
+      outDir: 'dist'
+    }
   }
 })

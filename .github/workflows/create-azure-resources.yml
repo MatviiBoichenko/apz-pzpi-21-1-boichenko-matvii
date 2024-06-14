@@ -27,10 +27,20 @@ jobs:
           echo "ACR_USERNAME=$(az acr credential show -n ${{ secrets.CONTAINER_REGISTRY }} --query 'username' -o tsv)" >> $GITHUB_ENV
           echo "ACR_PASSWORD=$(az acr credential show -n ${{ secrets.CONTAINER_REGISTRY }} --query 'passwords[0].value' -o tsv)" >> $GITHUB_ENV
 
-      - name: Create Backend Web App (Implicitly creates App Service Plan)
+      - name: Retry App Service Plan Creation
         run: |
-          az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN_BACKEND }} --name ${{ secrets.WEB_APP_BACKEND }} --deployment-container-image-name ${{ secrets.CONTAINER_REGISTRY }}.azurecr.io/fastapi-backend:latest --is-linux --sku B1
+          for i in {1..5}; do
+            az appservice plan create --name ${{ secrets.APP_SERVICE_PLAN }} --resource-group ${{ secrets.RESOURCE_GROUP }} --sku B1 --is-linux && break || sleep 60;
+          done
 
-      - name: Create Frontend Web App (Implicitly creates App Service Plan)
+      - name: Retry Backend Web App Creation
         run: |
-          az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN_FRONTEND }} --name ${{ secrets.WEB_APP_FRONTEND }} --runtime "NODE:16-lts" --is-linux --sku B1
+          for i in {1..5}; do
+            az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN }} --name ${{ secrets.WEB_APP_BACKEND }} --deployment-container-image-name ${{ secrets.CONTAINER_REGISTRY }}.azurecr.io/fastapi-backend:latest && break || sleep 60;
+          done
+
+      - name: Retry Frontend Web App Creation
+        run: |
+          for i in {1..5}; do
+            az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN }} --name ${{ secrets.WEB_APP_FRONTEND }} --runtime "NODE:16-lts" && break || sleep 60;
+          done

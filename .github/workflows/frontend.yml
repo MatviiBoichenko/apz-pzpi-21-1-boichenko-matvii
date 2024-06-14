@@ -28,11 +28,6 @@ jobs:
           cd Task4/apz-pzpi-21-1-boichenko-matvii-task4
           npm install
 
-      - name: List directory contents before build
-        run: |
-          cd Task4/apz-pzpi-21-1-boichenko-matvii-task4
-          ls -la
-
       - name: Build frontend
         run: |
           cd Task4/apz-pzpi-21-1-boichenko-matvii-task4

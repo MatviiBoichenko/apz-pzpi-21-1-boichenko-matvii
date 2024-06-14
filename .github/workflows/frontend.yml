@@ -48,4 +48,4 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           action: 'upload'
           app_location: 'Task4/apz-pzpi-21-1-boichenko-matvii-task4'
-          output_location: 'Task4/apz-pzpi-21-1-boichenko-matvii-task4/dist'
+          output_location: '/dist'

@@ -1,9 +1,6 @@
 name: Create Azure Resources
 
 on:
-  push:
-      paths:
-        - 'Task4/apz-pzpi-21-1-boichenko-matvii-task4/**'
   workflow_dispatch:
 
 jobs:
@@ -11,17 +8,17 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      RESOURCE_GROUP: matvii-nure-resources
-      CONTAINER_REGISTRY: matviiacr
-      APP_SERVICE_PLAN: matvii-nure
-      WEB_APP_BACKEND: matvi-nure-fastapi
-      STATIC_WEB_APP: matvi-nure-react
-      DB_SERVER: matvii-nure-db
-      DATABASE_USER: postgres
-      DATABASE_PASSWORD: 1qaz2wsx
-      DATABASE_PORT: 5432
-      DATABASE_NAME: postgres
-      DATABASE_SCHEMA: medmobile
+        RESOURCE_GROUP: matvii-nure-resources
+        CONTAINER_REGISTRY: myContainerRegistry
+        APP_SERVICE_PLAN: myAppServicePlan
+        WEB_APP_BACKEND: myBackendWebApp
+        STATIC_WEB_APP: myStaticWebApp
+        DB_SERVER: myDbServer
+        DATABASE_USER: postgres
+        DATABASE_PASSWORD: 1qaz2wsx
+        DATABASE_PORT: 5432
+        DATABASE_NAME: postgres
+        DATABASE_SCHEMA: medmobile
 
     steps:
       - name: Azure CLI Login

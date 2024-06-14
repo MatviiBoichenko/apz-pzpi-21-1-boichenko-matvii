@@ -42,5 +42,5 @@ jobs:
       - name: Retry Frontend Web App Creation
         run: |
           for i in {1..3}; do
-            az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN }} --name ${{ secrets.WEB_APP_FRONTEND }} --runtime "NODE:16-lts" && break || sleep 60;
+            az webapp create --resource-group ${{ secrets.RESOURCE_GROUP }} --plan ${{ secrets.APP_SERVICE_PLAN }} --name ${{ secrets.WEB_APP_FRONTEND }} --runtime "NODE:20-lts" && break || sleep 60;
           done

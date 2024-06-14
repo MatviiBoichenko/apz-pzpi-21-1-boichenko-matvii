@@ -44,7 +44,14 @@ jobs:
         run: |
           az appservice plan create --name $APP_SERVICE_PLAN --resource-group $RESOURCE_GROUP --sku B1 --is-linux
 
+      - name: Check if PostgreSQL Server Exists
+        id: check-db
+        run: |
+          az postgres flexible-server show --resource-group $RESOURCE_GROUP --name $DB_SERVER
+        continue-on-error: true
+
       - name: Create PostgreSQL Database
+        if: steps.check-db.outcome == 'failure'
         run: |
           az postgres flexible-server create --resource-group $RESOURCE_GROUP --name $DB_SERVER --admin-user $DATABASE_USER --admin-password $DATABASE_PASSWORD --tier Burstable --sku-name Standard_B1ms --version 13 --yes
 
@@ -62,7 +69,7 @@ jobs:
         run: |
           az webapp config appsettings set --resource-group $RESOURCE_GROUP --name $WEB_APP_BACKEND --settings DATABASE_USER=$DATABASE_USER DATABASE_PASSWORD=$DATABASE_PASSWORD DATABASE_HOST=$DB_SERVER.postgres.database.azure.com DATABASE_PORT=$DATABASE_PORT DATABASE_NAME=$DATABASE_NAME DATABASE_SCHEMA=$DATABASE_SCHEMA
 
-      - name: Create Azure Static Web App for Frontend
+      - name: Create Azure Static Web App
         run: |
           az staticwebapp create --resource-group $RESOURCE_GROUP --name $STATIC_WEB_APP --location EastUS --sku Free
           

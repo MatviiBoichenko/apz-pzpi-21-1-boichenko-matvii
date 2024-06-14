@@ -6,22 +6,22 @@ on:
       - 'Task2/apz-pzpi-21-1-boichenko-matvii-task2/**'
   workflow_dispatch:
 
+env:
+  RESOURCE_GROUP: matvii-nure-resources
+  CONTAINER_REGISTRY: matviiacr
+  APP_SERVICE_PLAN: matvii-nure
+  WEB_APP_BACKEND: matvi-nure-fastapi
+  STATIC_WEB_APP: matvi-nure-react
+  DB_SERVER: matvii-nure-db
+  DATABASE_USER: postgres
+  DATABASE_PASSWORD: 1qaz2wsx
+  DATABASE_PORT: 5432
+  DATABASE_NAME: postgres
+  DATABASE_SCHEMA: medmobile
+      
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    env:
-      RESOURCE_GROUP: matvii-nure-resources
-      CONTAINER_REGISTRY: matviiacr
-      APP_SERVICE_PLAN: matvii-nure
-      WEB_APP_BACKEND: matvi-nure-fastapi
-      STATIC_WEB_APP: matvi-nure-react
-      DB_SERVER: matvii-nure-db
-      DATABASE_USER: postgres
-      DATABASE_PASSWORD: 1qaz2wsx
-      DATABASE_PORT: 5432
-      DATABASE_NAME: postgres
-      DATABASE_SCHEMA: medmobile
 
     steps:
       - name: Checkout code

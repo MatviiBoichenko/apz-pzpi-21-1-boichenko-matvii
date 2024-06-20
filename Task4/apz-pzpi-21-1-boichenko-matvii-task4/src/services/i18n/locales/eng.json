@@ -1,0 +1,14 @@
+{
+  "home_header": "Home",
+  "login_header": "Login",
+  "register_header": "Register",
+  "profile_header": "Profile",
+  "medicine_header": "Medicines",
+  "cart_header": "Cart",
+  "my_orders_header": "My Orders",
+  "deliverer_header": "Deliverer",
+  "statistics_header": "Statistics",
+  "machines_header": "Machines",
+  "ENG": "English",
+  "UKR": "Ukranian"
+}

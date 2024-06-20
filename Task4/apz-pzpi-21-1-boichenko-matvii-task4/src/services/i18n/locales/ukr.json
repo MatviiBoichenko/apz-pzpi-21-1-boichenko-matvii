@@ -1,0 +1,14 @@
+{
+  "home_header": "Головна",
+  "login_header": "Вхід",
+  "register_header": "Реєстрація",
+  "profile_header": "Профіль",
+  "medicine_header": "Ліки",
+  "cart_header": "Кошик",
+  "my_orders_header": "Мої замовлення",
+  "deliverer_header": "Доставщик",
+  "statistics_header": "Статистика",
+  "machines_header": "Машини",
+  "ENG": "Англійська",
+  "UKR": "Українська"
+}

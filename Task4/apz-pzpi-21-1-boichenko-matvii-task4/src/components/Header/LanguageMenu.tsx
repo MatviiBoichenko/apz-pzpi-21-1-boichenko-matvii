@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AppStore } from "@stores/index.ts";
 import { useTranslation } from "react-i18next";
 import {
@@ -26,15 +26,14 @@ const languages = ['ENG', 'UKR'];
 const LanguageMenu = () => {
   const {t} = useTranslation();
   const {setLanguage, language} = AppStore.useUserStore();
-  const isDesktop = useBreakpointValue({base: false, lg: true})!;
+  const {isOpen, onToggle, onOpen, onClose} = useDisclosure();
 
+  const isDesktop = useBreakpointValue({base: false, lg: true})!;
   const handleLanguageItemClick = (selectedLanguage: string | 'ENG' | 'UKR') => {
     console.log("selectedLanguage", selectedLanguage);
     i18n.changeLanguage(selectedLanguage.toLowerCase());
     setLanguage(selectedLanguage);
   };
-
-  const {isOpen, onToggle, onOpen, onClose} = useDisclosure();
 
   if (!isDesktop) {
     return (<Stack w='100%' spacing={4}
